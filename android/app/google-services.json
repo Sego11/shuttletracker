@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "846379936256",
+    "project_id": "campride-tracker",
+    "storage_bucket": "campride-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846379936256:android:d6f48da01d04062d0606e5",
+        "android_client_info": {
+          "package_name": "com.example.shuttle_tracker_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9HhL1opISRrqqXFzFrbPEuii0WXEqXjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
