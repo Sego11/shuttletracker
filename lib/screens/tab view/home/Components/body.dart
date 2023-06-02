@@ -9,7 +9,11 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: Cro,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const <Widget>[
+
+      ],
+
     );
   }
 }

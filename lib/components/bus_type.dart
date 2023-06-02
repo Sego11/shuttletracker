@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
+import '../constants.dart';
+
+class BusType extends StatelessWidget {
+  final String busName;
+  final int busIndex;
+  const BusType({
+    Key? key,
+    required this.busName,
+    required this.busIndex,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const BusScreen()),
+        );
+
+        selectedBusNames.add(busName);
+        //print(selectedBusNames);
+      },
+      child: Container(
+        height: 78,
+        width: 373,
+        decoration: BoxDecoration(
+          color: header,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: black,
+            width: 1,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/buses.png',
+              ),
+              const SizedBox(
+                width: 70,
+              ),
+              Text(
+                busName,
+                style: const TextStyle(
+                  color: black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
