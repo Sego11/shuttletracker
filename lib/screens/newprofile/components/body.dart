@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/home/home_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key});
@@ -183,7 +184,7 @@ class Body extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: ((context) => const HomeScreen()),
+                  builder: ((context) => const TabView()),
                 ),
               );
             },

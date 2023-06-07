@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/appinfo/app_info.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/changepassword/change_password.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/editprofile/edit_profile.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/location/change_location.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/profile_screen.dart';
 
 const white = Color(0xffffffff);
 const black = Colors.black;
@@ -20,22 +26,91 @@ List<String> busNames = [
   'Commercial Bus',
   'Gaza Bus',
   'Bomso Bus',
-  ''
 ];
 
 List<String> selectedBusNames = [];
 
-List<String> bottomNavTitle = [
-  'Home',
-  'Buses',
-  'Favourites',
+List<String> settingsButtonText = [
   'Profile',
+  'Dark theme',
+  'Rules and Terms',
+  "FAQ's",
+  'Rate us',
+  'Support',
 ];
-List bottomNavIcon = [
-  Icons.home,
-  Icons.directions_bus,
-  Icons.star,
-  Icons.person,
+// List settings = [
+//   Icons.home,
+//   Icons.directions_bus,
+//   Icons.star,
+//   Icons.person,
+// ];
+
+List settingsIcon = [
+  Image.asset(
+    'assets/images/profile.png',
+    scale: 1.2,
+  ),
+  Image.asset(
+    'assets/images/theme.png',
+    scale: 1.2,
+  ),
+  Image.asset(
+    'assets/images/terms.png',
+    scale: 1.2,
+  ),
+  Image.asset(
+    "assets/images/FAQ's.png",
+    scale: 1.2,
+  ),
+  Image.asset(
+    'assets/images/rate.png',
+    scale: 1.2,
+  ),
+  Image.asset(
+    'assets/images/support.png',
+    scale: 1.2,
+  ),
 ];
 
-bool isBottomNavIconSelected = false;
+List<Widget> settingsscreens = [
+  const ProfileScreen(),
+  NewProfileScreen(),
+  NewProfileScreen(),
+  NewProfileScreen(),
+  NewProfileScreen(),
+  NewProfileScreen(),
+];
+
+int selectedBusNameCount = 0;
+
+List<String> profileButtonText = [
+  'Edit profile',
+  'Change password',
+  'App information',
+  // "Change location",
+];
+List profileIcons = [
+  Image.asset(
+    'assets/images/prof.png',
+    scale: 1.2,
+  ),
+  Image.asset(
+    'assets/images/pass.png',
+    scale: 1.2,
+  ),
+  Image.asset(
+    'assets/images/info.png',
+    scale: 1.2,
+  ),
+  // Image.asset(
+  //   "assets/images/loc.png",
+  //   scale: 1.2,
+  // ),
+];
+
+List<Widget> profilescreens = [
+  const EditProfileScreen(),
+  const ChangePasswordScreen(),
+  const AppInfoScreen(),
+  // const ChangeLocationScreen(),
+];

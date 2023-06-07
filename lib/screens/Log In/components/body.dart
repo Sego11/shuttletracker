@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/main.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/sign_up_screen.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/home/home_screen.dart';
 import 'package:shuttle_tracker_app/screens/password/forgot%20password/forgot_password_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -172,7 +171,7 @@ class _BodyState extends State<Body> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => const HomeScreen()),
+                    builder: ((context) => const TabView()),
                   ),
                 );
               },
@@ -185,22 +184,15 @@ class _BodyState extends State<Body> {
                   border: Border.all(color: black, width: 1),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const <Widget>[
-                    SizedBox(width: 132),
-                    Text(
-                      'Login',
-                      style: TextStyle(
-                        color: black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
+                child: const Center(
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      color: black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
                     ),
-                    // Spacer(),
-                    // Icon(Icons.arrow_forward_ios_rounded, color: black),
-                  ],
+                  ),
                 ),
               ),
             ),

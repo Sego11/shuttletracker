@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/main.dart';
 import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
-import 'package:shuttle_tracker_app/screens/profile/profile_screen.dart';
+import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -147,7 +147,7 @@ class _BodyState extends State<Body> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => const ProfileScreen()),
+                    builder: ((context) => const NewProfileScreen()),
                   ),
                 );
               },

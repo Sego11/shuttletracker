@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 import '../../../../../../components/bus_type.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({super.key});
 
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -59,12 +67,20 @@ class Body extends StatelessWidget {
               height: 48,
             ),
             ListView.separated(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return BusType(
+                  addedBus: () {
+                    //prevents duplicates of bus names in selectedBusNames list
+                    if (!selectedBusNames.contains(busNames[index])) {
+                      setState(() {
+                        selectedBusNames.add(busNames[index]);
+                      });
+                    }
+                    Navigator.of(context).pop(true);
+                  },
                   busName: busNames[index],
-                  busIndex: index,
                 );
               },
               separatorBuilder: (context, index) {
@@ -72,7 +88,6 @@ class Body extends StatelessWidget {
               },
               itemCount: busNames.length,
             ),
-            
           ],
         ),
       ),

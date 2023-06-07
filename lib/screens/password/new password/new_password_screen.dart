@@ -13,18 +13,14 @@ class NewPasswordScreen extends StatelessWidget {
         backgroundColor: header,
         automaticallyImplyLeading: false,
         // leading: const DefaultBackButton(),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              width: 325,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 20,
             ),
-            Image.asset(
-              'assets/images/logo.png',
-            ),
-          ],
-        ),
+            child: Image.asset('assets/images/logo.png'),
+          ),
+        ],
       ),
       body: const Body(),
     );

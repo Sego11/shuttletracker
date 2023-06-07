@@ -2,27 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import '../constants.dart';
 
-class BusType extends StatelessWidget {
+class BusType extends StatefulWidget {
+  final VoidCallback addedBus;
   final String busName;
-  final int busIndex;
   const BusType({
     Key? key,
     required this.busName,
-    required this.busIndex,
+   required this.addedBus,
   }) : super(key: key);
 
   @override
+  State<BusType> createState() => _BusTypeState();
+}
+
+class _BusTypeState extends State<BusType> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const BusScreen()),
-        );
-
-        selectedBusNames.add(busName);
-        //print(selectedBusNames);
-      },
+      onTap: widget.addedBus,
       child: Container(
         height: 78,
         width: 373,
@@ -47,7 +44,7 @@ class BusType extends StatelessWidget {
                 width: 70,
               ),
               Text(
-                busName,
+                widget.busName,
                 style: const TextStyle(
                   color: black,
                   fontSize: 16,

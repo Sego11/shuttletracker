@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/screens/profile/profile_screen.dart';
+import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key});
@@ -37,7 +37,7 @@ class Body extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
+                        builder: (context) => const NewProfileScreen(),
                       ),
                     );
                   },

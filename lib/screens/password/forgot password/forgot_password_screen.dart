@@ -14,19 +14,14 @@ class ForgotPassword extends StatelessWidget {
         leading: const DefaultBackButton(),
         automaticallyImplyLeading: false,
         backgroundColor: header,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                width: 237,
-              ),
-              Image.asset('assets/images/logo.png'),
-            ],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 20,
+            ),
+            child: Image.asset('assets/images/logo.png'),
           ),
-        ),
+        ],
       ),
       body: const Body(),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shuttle_tracker_app/components/bottom_nav_tab.dart';
+
 import 'package:shuttle_tracker_app/constants.dart';
 
 class Body extends StatelessWidget {
@@ -14,7 +14,7 @@ class Body extends StatelessWidget {
         SizedBox(
           height: 305,
         ),
-         Center(
+        Center(
           child: Text(
             'No favourites added',
             style: TextStyle(

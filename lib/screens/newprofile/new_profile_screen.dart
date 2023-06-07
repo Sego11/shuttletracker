@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
-import 'package:shuttle_tracker_app/screens/profile/components/body.dart';
+import 'package:shuttle_tracker_app/screens/newprofile/components/body.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class NewProfileScreen extends StatelessWidget {
+  const NewProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

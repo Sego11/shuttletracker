@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-
 import '../../../../components/selected_bus_type_screen.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key});
+  final Function removeBus;
+  final List<String> selectedBusNames;
+  const Body(
+      {super.key, required this.selectedBusNames, required this.removeBus});
 
   @override
   State<Body> createState() => _BodyState();
@@ -23,9 +25,9 @@ class _BodyState extends State<Body> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: selectedBusNames.isNotEmpty ? 45 : 300,
+              height: widget.selectedBusNames.isNotEmpty ? 45 : 300,
             ),
-            selectedBusNames.isNotEmpty
+            widget.selectedBusNames.isNotEmpty
                 ? TextField(
                     decoration: InputDecoration(
                       fillColor: white,
@@ -65,19 +67,16 @@ class _BodyState extends State<Body> {
             const SizedBox(
               height: 45,
             ),
-            selectedBusNames.isNotEmpty
+            widget.selectedBusNames.isNotEmpty
                 ? ListView.separated(
                     shrinkWrap: true,
                     itemBuilder: (((context, index) {
                       return SelectedBusType(
                         screen: (() {
-                          setState(() {
-                            selectedBusNames.removeAt(index);
-                          });
+                          widget.removeBus(widget.selectedBusNames[index]);
                           Navigator.pop(context);
                         }),
-                        selectedBusName: selectedBusNames[index],
-                        selectedBusIndex: index,
+                        selectedBusName: widget.selectedBusNames[index],
                       );
                     })),
                     separatorBuilder: ((context, index) {
@@ -85,7 +84,7 @@ class _BodyState extends State<Body> {
                         height: 45,
                       );
                     }),
-                    itemCount: selectedBusNames.length)
+                    itemCount: widget.selectedBusNames.length)
                 : const Center(
                     child: Text(
                       'No Bus Added',
