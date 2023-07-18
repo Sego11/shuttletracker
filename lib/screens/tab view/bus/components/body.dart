@@ -5,8 +5,11 @@ import '../../../../components/selected_bus_type_screen.dart';
 class Body extends StatefulWidget {
   final Function removeBus;
   final List<String> selectedBusNames;
-  const Body(
-      {super.key, required this.selectedBusNames, required this.removeBus});
+  const Body({
+    super.key,
+    required this.selectedBusNames,
+    required this.removeBus,
+  });
 
   @override
   State<Body> createState() => _BodyState();

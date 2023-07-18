@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import '../constants.dart';
 
 class BusType extends StatefulWidget {

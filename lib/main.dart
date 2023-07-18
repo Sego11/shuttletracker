@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/sign_up_screen.dart';
+import 'package:shuttle_tracker_app/screens/map%20view/map_view.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/favorites/favorites_screen.dart';

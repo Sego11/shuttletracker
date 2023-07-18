@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/map%20view/map_view.dart';
 
 class SelectedBusType extends StatefulWidget {
   final VoidCallback screen;
@@ -24,25 +25,80 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
           return AlertDialog(
             backgroundColor: header,
             title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // const Icon(
-                //   Icons.directions_bus,
-                // ),
-                const Text(
-                  'Brunei Bus',
+                Text(
+                  busNameSelected,
                 ),
-                const SizedBox(
-                  width: 20,
-                ),
+                const Spacer(),
                 GestureDetector(
-                  onTap: () {},
-                  child: const Icon(
-                    Icons.star_border_outlined,
-                    color: Colors.amber,
-                  ),
-                )
+                  onTap: () {
+                    setState(() {
+                      isFavIconClicked = !isFavIconClicked;
+                    });
+                    Navigator.pop(context);
+
+                    if (isFavIconClicked == true) {
+                      favBusList.add(widget.selectedBusName);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(
+                            seconds: 2,
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          content: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            child: Text(
+                              '$busNameSelected added to favourites',
+                              style: const TextStyle(
+                                height: 1.3,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      );
+                    } else {
+                      int index = favBusList.indexOf(widget.selectedBusName);
+                      if (index != -1) {
+                        favBusList.removeAt(index);
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: const Duration(
+                          seconds: 2,
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        content: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          child: Text(
+                            '$busNameSelected has been removed from favourites',
+                            style: const TextStyle(
+                              height: 1.3,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ));
+                    }
+                  },
+                  child: isFavIconClicked
+                      ? const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        )
+                      : const Icon(
+                          Icons.star_border,
+                          color: Colors.amber,
+                        ),
+                ),
               ],
             ),
             titleTextStyle: const TextStyle(
@@ -57,42 +113,40 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
             ),
             content: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const SizedBox(
                   height: 10,
                 ),
-                // const Text(
-                //   'Bus Information:',
-                //   style: TextStyle(
-                //     color: black,
-                //     fontSize: 16,
-                //     fontWeight: FontWeight.w600,
-                //   ),
-                // ),
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  'Bus Number: 4302-18',
-                  style: TextStyle(
+                Text(
+                  'Bus Number: $busNumberSelected',
+                  style: const TextStyle(
                     color: black,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Text(
-                  'Destination: KSB',
-                  style: TextStyle(
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Destination: $busDestinationSelected',
+                  style: const TextStyle(
                     color: black,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Text(
-                  'Seat Numbers: 32 ',
-                  style: TextStyle(
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Seat Numbers: $busSeatNumberSelected ',
+                  style: const TextStyle(
                     color: black,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -103,7 +157,18 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                 ),
                 Center(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        int index = busNames.indexOf(widget.selectedBusName);
+                        if (index != -1) {
+                          busNameSelected = busNames[index];
+                        }
+                      });
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: ((context) => MapView())));
+                      //
+                    },
                     child: Text(
                       'view location on map',
                       style: TextStyle(
@@ -237,6 +302,15 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
           children: [
             GestureDetector(
               onTap: () {
+                setState(() {
+                  int index = busNames.indexOf(widget.selectedBusName);
+                  if (index != -1) {
+                    busNameSelected = busNames[index];
+                    busNumberSelected = faveBusNumber[index];
+                    busDestinationSelected = faveDestination[index];
+                    busSeatNumberSelected = faveSeatNumber[index];
+                  }
+                });
                 displayBusInfo();
               },
               child: Container(

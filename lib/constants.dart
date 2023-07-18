@@ -3,7 +3,6 @@ import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/appinfo/app_info.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/changepassword/change_password.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/editprofile/edit_profile.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/location/change_location.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/profile_screen.dart';
 
 const white = Color(0xffffffff);
@@ -38,12 +37,6 @@ List<String> settingsButtonText = [
   'Rate us',
   'Support',
 ];
-// List settings = [
-//   Icons.home,
-//   Icons.directions_bus,
-//   Icons.star,
-//   Icons.person,
-// ];
 
 List settingsIcon = [
   Image.asset(
@@ -114,3 +107,36 @@ List<Widget> profilescreens = [
   const AppInfoScreen(),
   // const ChangeLocationScreen(),
 ];
+
+List faveBusName = [
+  'Brunei Bus',
+  'Commercial Bus',
+  'Gaza Bus',
+  'Bomso Bus',
+];
+List faveBusNumber = [
+  '5464-12',
+  '4301-15',
+  '2643-09',
+  '9665-10',
+];
+List faveDestination = [
+  'KSB',
+  'KSB',
+  'Pharmacy Block',
+  'KSB',
+];
+List faveSeatNumber = [
+  '32',
+  '16',
+  '40',
+  '8',
+];
+
+String busNameSelected = '';
+String busNumberSelected = '';
+String busDestinationSelected = '';
+String busSeatNumberSelected = '';
+
+List favBusList = [];
+bool isFavIconClicked = false;
