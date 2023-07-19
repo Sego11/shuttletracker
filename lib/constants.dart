@@ -140,3 +140,5 @@ String busSeatNumberSelected = '';
 
 List favBusList = [];
 bool isFavIconClicked = false;
+
+String loggedUserID = '';

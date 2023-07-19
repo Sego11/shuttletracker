@@ -14,6 +14,7 @@ class ForgotPassword extends StatelessWidget {
         leading: const DefaultBackButton(),
         automaticallyImplyLeading: false,
         backgroundColor: header,
+        elevation: 0,
         actions: [
           Padding(
             padding: const EdgeInsets.only(

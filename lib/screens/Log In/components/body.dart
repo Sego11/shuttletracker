@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/screens/Sign%20Up/sign_up_screen.dart';
+import 'package:shuttle_tracker_app/screens/Sign%20Up/Components/body.dart';
 import 'package:shuttle_tracker_app/screens/password/forgot%20password/forgot_password_screen.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key});
+  final VoidCallback showSignUpScreen;
+
+  const Body({
+    super.key,
+    required this.showSignUpScreen,
+  });
 
   @override
   State<Body> createState() => _BodyState();
@@ -14,6 +19,24 @@ class Body extends StatefulWidget {
 bool isPasswordIconClicked = true;
 
 class _BodyState extends State<Body> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future logIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    isSignUpClicked = false;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,6 +92,7 @@ class _BodyState extends State<Body> {
             ),
             const SizedBox(height: 14),
             TextField(
+              controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               autofocus: false,
               decoration: InputDecoration(
@@ -106,6 +130,7 @@ class _BodyState extends State<Body> {
               height: 14,
             ),
             TextField(
+              controller: _passwordController,
               obscureText: isPasswordIconClicked ? true : false,
               autofocus: false,
               decoration: InputDecoration(
@@ -167,14 +192,7 @@ class _BodyState extends State<Body> {
               height: 25,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: ((context) => const TabView()),
-                  ),
-                );
-              },
+              onTap: logIn,
               child: Container(
                 height: 63,
                 width: 375,
@@ -344,14 +362,15 @@ class _BodyState extends State<Body> {
                   width: 2,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => const SignUpScreen()),
-                      ),
-                    );
-                  },
+                  onTap: widget.showSignUpScreen,
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: ((context) => const SignUpScreen()),
+                  //     ),
+                  //   );
+                  // },
                   child: Text(
                     'Sign up here',
                     style: TextStyle(

@@ -45,7 +45,9 @@ class Body extends StatelessWidget {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SignUpScreen()),
+                                builder: (context) => SignUpScreen(
+                                      showLoginScreen: () {},
+                                    )),
                             (route) => false);
                       },
                       child: Container(

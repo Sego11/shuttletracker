@@ -54,7 +54,7 @@ class _BodyState extends State<Body> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: ((context) => const LogInScreen()),
+                        builder: ((context) =>  LogInScreen(showSignUpScreen: () {  },)),
                       ),
                     );
                   },

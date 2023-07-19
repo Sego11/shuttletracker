@@ -1,19 +1,64 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/main.dart';
-import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
-import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key});
+  final VoidCallback showLoginScreen;
+
+  const Body({
+    super.key,
+    required this.showLoginScreen,
+  });
 
   @override
   State<Body> createState() => _BodyState();
 }
 
+bool isSignUpClicked = false;
 bool isPasswordIconClicked = true;
 
 class _BodyState extends State<Body> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future signUp() async {
+    if (passwordConfirmed()) {
+      setState(() {
+        isSignUpClicked = true;
+      });
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      loggedUserID = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance.collection('users').add({
+        'User ID': loggedUserID,
+        'Email': _emailController.text.trim(),
+      });
+    }
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confirmPasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,7 +101,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 89,
+              height: 50,
             ),
             const Text(
               'Your Email Address',
@@ -67,8 +112,11 @@ class _BodyState extends State<Body> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(
+              height: 5,
+            ),
             TextField(
+              controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               autofocus: false,
               decoration: InputDecoration(
@@ -91,7 +139,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             const Text(
               'choose a password',
@@ -103,9 +151,10 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 14,
+              height: 5,
             ),
             TextField(
+              controller: _passwordController,
               obscureText: isPasswordIconClicked ? true : false,
               autofocus: false,
               decoration: InputDecoration(
@@ -141,16 +190,71 @@ class _BodyState extends State<Body> {
                 ),
               ),
             ),
-            const SizedBox(height: 36),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'confirm password',
+              style: TextStyle(
+                color: black,
+                fontFamily: 'inter',
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            TextField(
+              controller: _confirmPasswordController,
+              obscureText: isPasswordIconClicked ? true : false,
+              autofocus: false,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: black, width: 1),
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primary, width: 1),
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                hintText: 'Confirm your password here',
+                hintStyle: const TextStyle(
+                  color: grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                suffixIcon: IconButton(
+                  splashColor: Colors.transparent,
+                  onPressed: () {
+                    setState(() {
+                      isPasswordIconClicked = !isPasswordIconClicked;
+                    });
+                  },
+                  icon: isPasswordIconClicked
+                      ? const Icon(
+                          Icons.visibility,
+                        )
+                      : const Icon(Icons.visibility_off),
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: ((context) => const NewProfileScreen()),
-                  ),
-                );
-              },
+              onTap: signUp,
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: ((context) => const NewProfileScreen()),
+              //     ),
+              //   );
+              // },
               child: Container(
                 height: 63,
                 width: 375,
@@ -180,7 +284,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 19,
+              height: 15,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -219,7 +323,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 33,
+              height: 20,
             ),
             GestureDetector(
               onTap: () {},
@@ -264,7 +368,7 @@ class _BodyState extends State<Body> {
                   )),
             ),
             const SizedBox(
-              height: 24,
+              height: 15,
             ),
             GestureDetector(
               onTap: () {},
@@ -309,7 +413,7 @@ class _BodyState extends State<Body> {
                   )),
             ),
             const SizedBox(
-              height: 24,
+              height: 15,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -327,16 +431,17 @@ class _BodyState extends State<Body> {
                   width: 2,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => const LogInScreen()),
-                      ),
-                    );
-                  },
+                  onTap: widget.showLoginScreen,
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: ((context) => const LogInScreen()),
+                  //     ),
+                  //   );
+                  // },
                   child: Text(
-                    'Login here',
+                    ' Login here',
                     style: TextStyle(
                       color: primary,
                       fontSize: 16,

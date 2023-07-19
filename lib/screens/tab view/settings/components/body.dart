@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
@@ -42,12 +44,14 @@ class Body extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         selectedBusNames.clear();
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LogInScreen(),
-                            ),
-                            (route) => false);
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pop(context);
+                        // Navigator.pushAndRemoveUntil(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => const LogInScreen(),
+                        //     ),
+                        //     (route) => false);
                       },
                       child: Container(
                         height: 63,
