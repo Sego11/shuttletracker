@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
@@ -11,6 +12,12 @@ class AddingBusScreen extends StatefulWidget {
 }
 
 class _AddingBusScreenState extends State<AddingBusScreen> {
+  // Future getDocId() async {
+  //   await FirebaseFirestore.instance.collection('Buses').get().then(
+  //         (snapshot) => snapshot.docs.forEach((element) { }),
+  //       );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

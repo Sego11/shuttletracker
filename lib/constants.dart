@@ -142,3 +142,5 @@ List favBusList = [];
 bool isFavIconClicked = false;
 
 String loggedUserID = '';
+
+List<String> busIDs = [];
