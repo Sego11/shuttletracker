@@ -4,10 +4,14 @@ import '../constants.dart';
 class BusType extends StatefulWidget {
   final VoidCallback addedBus;
   final String busName;
-  const BusType({
+  Widget allBuses;
+  bool isBusListScreen;
+  BusType({
     Key? key,
     required this.busName,
-   required this.addedBus,
+    required this.addedBus,
+    this.isBusListScreen = false,
+    this.allBuses = const SizedBox(),
   }) : super(key: key);
 
   @override
@@ -40,9 +44,9 @@ class _BusTypeState extends State<BusType> {
                 'assets/images/buses.png',
               ),
               const SizedBox(
-                width: 70,
+                width: 60,
               ),
-              Text(
+              widget.isBusListScreen ? widget.allBuses: Text(
                 widget.busName,
                 style: const TextStyle(
                   color: black,

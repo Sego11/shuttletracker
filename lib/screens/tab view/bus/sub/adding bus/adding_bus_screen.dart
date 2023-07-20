@@ -1,7 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/read%20data/get_bus_name.dart';
 import '../../../../../components/bus_type.dart';
 
 class AddingBusScreen extends StatefulWidget {
@@ -11,12 +16,49 @@ class AddingBusScreen extends StatefulWidget {
   State<AddingBusScreen> createState() => _AddingBusScreenState();
 }
 
+List addedBuses = [];
+
 class _AddingBusScreenState extends State<AddingBusScreen> {
-  // Future getDocId() async {
-  //   await FirebaseFirestore.instance.collection('Buses').get().then(
-  //         (snapshot) => snapshot.docs.forEach((element) { }),
-  //       );
-  // }
+  Future getBusId() async {
+    busIDs.clear();
+    await FirebaseFirestore.instance.collection('buses').get().then(
+          (snapshot) => snapshot.docs.forEach(
+            (buses) {
+              // print(buses.reference);
+              busIDs.add(buses.reference.id);
+            },
+          ),
+        );
+  }
+
+  Future addBuses() async {
+    try {
+      final document = await FirebaseFirestore.instance
+          .collection('added buses')
+          .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (document.docs.isNotEmpty) {
+        print(loggedUserID);
+
+        final docID = document.docs.single.id;
+        await FirebaseFirestore.instance
+            .collection('added buses')
+            .doc(docID)
+            .update({
+          'Added Bus IDs': addedBuses,
+        });
+      } else {
+        print(loggedUserID);
+        await FirebaseFirestore.instance.collection('added buses').add({
+          'User ID': FirebaseAuth.instance.currentUser!.uid,
+          'Added Bus IDs': addedBuses,
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,21 +127,38 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
               const SizedBox(
                 height: 48,
               ),
-              ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return BusType(
-                    addedBus: () {
-                      Navigator.pop(context, busNames[index]);
-                    },
-                    busName: busNames[index],
+              FutureBuilder(
+                future: getBusId(),
+                builder: ((context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return BusType(
+                          isBusListScreen: true,
+                          addedBus: () {
+                            addedBuses.add(busIDs[index]);
+                            Navigator.pop(context, busNames[index]);
+
+                            addBuses();
+                          },
+                          allBuses: GetBusName(
+                            busId: busIDs[index],
+                          ),
+                          busName: '',
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 45);
+                      },
+                      itemCount: busIDs.length,
+                    );
+                  }
+                  return Center(
+                    child: CupertinoActivityIndicator(),
                   );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 45);
-                },
-                itemCount: busNames.length,
+                }),
               ),
             ],
           ),

@@ -27,7 +27,9 @@ class _BodyState extends State<Body> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
     isSignUpClicked = false;
+    loggedUserID =  FirebaseAuth.instance.currentUser!.uid;
   }
 
   @override
