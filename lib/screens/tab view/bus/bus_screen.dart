@@ -13,7 +13,6 @@ class BusScreen extends StatefulWidget {
 }
 
 class _BusScreenState extends State<BusScreen> {
-
   //function to remove an object
   void removeBus(String busName) {
     setState(() {
@@ -78,10 +77,11 @@ class _BusScreenState extends State<BusScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             content: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 14.0),
                               child: Text(
                                 '$result had already been added.',
-                                style: const  TextStyle(height: 1.3),
+                                style: const TextStyle(height: 1.3),
                                 textAlign: TextAlign.center,
                               ),
                             ),
