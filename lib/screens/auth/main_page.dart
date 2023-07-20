@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/Components/body.dart';
 import 'package:shuttle_tracker_app/screens/auth/auth_page.dart';
 import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
@@ -22,6 +23,7 @@ class _MainPageState extends State<MainPage> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
+            loggedUserID = FirebaseAuth.instance.currentUser!.uid;
             return isSignUpClicked ? NewProfileScreen() : TabView();
           } else {
             return AuthPage();

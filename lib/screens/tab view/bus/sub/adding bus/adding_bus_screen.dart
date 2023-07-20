@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/read%20data/get_bus_name.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import '../../../../../components/bus_type.dart';
 
 class AddingBusScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
   Future getBusId() async {
     busIDs.clear();
     await FirebaseFirestore.instance.collection('buses').get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
           (snapshot) => snapshot.docs.forEach(
             (buses) {
               // print(buses.reference);
@@ -39,7 +41,7 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
           .get();
 
       if (document.docs.isNotEmpty) {
-        print(loggedUserID);
+        // print(loggedUserID);
 
         final docID = document.docs.single.id;
         await FirebaseFirestore.instance
@@ -49,7 +51,7 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
           'Added Bus IDs': addedBuses,
         });
       } else {
-        print(loggedUserID);
+        // print(loggedUserID);
         await FirebaseFirestore.instance.collection('added buses').add({
           'User ID': FirebaseAuth.instance.currentUser!.uid,
           'Added Bus IDs': addedBuses,
@@ -138,10 +140,15 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
                         return BusType(
                           isBusListScreen: true,
                           addedBus: () {
-                            addedBuses.add(busIDs[index]);
-                            Navigator.pop(context, busNames[index]);
-
+                            if (!addedBuses.contains(busIDs[index])) {
+                              addedBuses.add(busIDs[index]);
+                            }
                             addBuses();
+                            // Navigator.pop(context, busNames[index]);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BusScreen()));
                           },
                           allBuses: GetBusName(
                             busId: busIDs[index],
