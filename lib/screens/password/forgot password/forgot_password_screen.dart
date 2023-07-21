@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/main.dart';
 import 'package:shuttle_tracker_app/screens/password/forgot%20password/components/body.dart';
 
 class ForgotPassword extends StatelessWidget {
