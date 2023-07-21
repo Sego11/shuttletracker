@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,7 +33,13 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
         );
   }
 
-  Future addBuses() async {
+  Future addBuses(int index) async {
+    print(busIDs);
+    if (!addedBuses.contains(busIDs[index])) {
+      addedBuses.add(busIDs[index]);
+    } else {
+      print('Error');
+    }
     try {
       final document = await FirebaseFirestore.instance
           .collection('added buses')
@@ -57,6 +63,8 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
           'Added Bus IDs': addedBuses,
         });
       }
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => BusScreen()));
     } catch (e) {
       print(e.toString());
     }
@@ -140,15 +148,7 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
                         return BusType(
                           isBusListScreen: true,
                           addedBus: () {
-                            if (!addedBuses.contains(busIDs[index])) {
-                              addedBuses.add(busIDs[index]);
-                            }
-                            addBuses();
-                            // Navigator.pop(context, busNames[index]);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BusScreen()));
+                            addBuses(index);
                           },
                           allBuses: GetBusName(
                             busId: busIDs[index],

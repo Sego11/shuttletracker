@@ -1,106 +1,140 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
 import '../../../../components/selected_bus_type_screen.dart';
 
 class Body extends StatefulWidget {
-  final Function removeBus;
-  final List<String> selectedBusNames;
   const Body({
     super.key,
-    required this.selectedBusNames,
-    required this.removeBus,
   });
 
   @override
   State<Body> createState() => _BodyState();
 }
 
+int busRemovalIndex = 0;
+
 class _BodyState extends State<Body> {
+  ReadData readData = ReadData();
+
+  Future removeBus(String busName) async {
+    final document = await FirebaseFirestore.instance
+        .collection('added buses')
+        .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    print(addedBuses);
+
+    if (document.docs.isNotEmpty) {
+      final id = document.docs.single.id;
+      await FirebaseFirestore.instance
+          .collection('added buses')
+          .doc(id)
+          .update({'Added Bus IDs': addedBuses});
+    }
+    setState(() {
+      selectedBusNames.remove(busName);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: widget.selectedBusNames.isNotEmpty ? 45 : 300,
-            ),
-            widget.selectedBusNames.isNotEmpty
-                ? TextField(
-                    decoration: InputDecoration(
-                      fillColor: white,
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          22,
-                        ),
-                        borderSide: const BorderSide(
-                          color: black,
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          22,
-                        ),
-                        borderSide: BorderSide(
-                          color: primary,
-                          width: 1,
-                        ),
-                      ),
-                      hintText: 'Search',
-                      hintStyle: const TextStyle(
-                        color: grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      suffixIcon: const Icon(
-                        Icons.search,
-                        color: black,
-                        size: 25,
-                      ),
+    return FutureBuilder(
+        future: readData.getSelectedBuses(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: selectedBusNames.isNotEmpty ? 45 : 300,
                     ),
-                  )
-                : const SizedBox(),
-            const SizedBox(
-              height: 45,
-            ),
-            widget.selectedBusNames.isNotEmpty
-                ? ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (((context, index) {
-                      return SelectedBusType(
-                        screen: (() {
-                          widget.removeBus(widget.selectedBusNames[index]);
-                          Navigator.pop(context);
-                        }),
-                        selectedBusName: widget.selectedBusNames[index],
-                      );
-                    })),
-                    separatorBuilder: ((context, index) {
-                      return const SizedBox(
-                        height: 45,
-                      );
-                    }),
-                    itemCount: widget.selectedBusNames.length)
-                : const Center(
-                    child: Text(
-                      'No Bus Added',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: black,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    selectedBusNames.isNotEmpty
+                        ? TextField(
+                            decoration: InputDecoration(
+                              fillColor: white,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  22,
+                                ),
+                                borderSide: const BorderSide(
+                                  color: black,
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  22,
+                                ),
+                                borderSide: BorderSide(
+                                  color: primary,
+                                  width: 1,
+                                ),
+                              ),
+                              hintText: 'Search',
+                              hintStyle: const TextStyle(
+                                color: grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              suffixIcon: const Icon(
+                                Icons.search,
+                                color: black,
+                                size: 25,
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    const SizedBox(
+                      height: 45,
                     ),
-                  )
-          ],
-        ),
-      ),
-    );
+                    selectedBusNames.isNotEmpty
+                        ? ListView.separated(
+                            shrinkWrap: true,
+                            itemBuilder: (((context, index) {
+                              return SelectedBusType(
+                                index: index,
+                                screen: (() {
+                                  addedBuses.removeAt(index);
+                                  removeBus(selectedBusNames[index]);
+                                  Navigator.pop(context);
+                                }),
+                                selectedBusName: selectedBusNames[index],
+                              );
+                            })),
+                            separatorBuilder: ((context, index) {
+                              return const SizedBox(
+                                height: 45,
+                              );
+                            }),
+                            itemCount: selectedBusNames.length)
+                        : const Center(
+                            child: Text(
+                              'No Bus Added',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                  ],
+                ),
+              ),
+            );
+          }
+          return Center(child: CupertinoActivityIndicator());
+        });
   }
 }

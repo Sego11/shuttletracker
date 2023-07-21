@@ -5,10 +5,12 @@ import 'package:shuttle_tracker_app/screens/map%20view/map_view.dart';
 class SelectedBusType extends StatefulWidget {
   final VoidCallback screen;
   final String selectedBusName;
-  const SelectedBusType({
+  int index;
+  SelectedBusType({
     Key? key,
     required this.selectedBusName,
     required this.screen,
+    this.index = 0,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  busNameSelected,
+                  '${specificBusName[widget.index]} Bus',
                 ),
                 const Spacer(),
                 GestureDetector(
@@ -51,7 +53,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                           content: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                             child: Text(
-                              '$busNameSelected added to favourites',
+                              '${specificBusName[widget.index]} added to favourites',
                               style: const TextStyle(
                                 height: 1.3,
                               ),
@@ -76,7 +78,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                         content: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 14),
                           child: Text(
-                            '$busNameSelected has been removed from favourites',
+                            '${specificBusName[widget.index]} has been removed from favourites',
                             style: const TextStyle(
                               height: 1.3,
                             ),
@@ -123,7 +125,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                   height: 10,
                 ),
                 Text(
-                  'Bus Number: $busNumberSelected',
+                  'Bus Number: ${specificBusNumber[widget.index]}',
                   style: const TextStyle(
                     color: black,
                     fontSize: 16,
@@ -134,7 +136,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                   height: 5,
                 ),
                 Text(
-                  'Destination: $busDestinationSelected',
+                  'Destination: ${specificBusDestination[widget.index]}',
                   style: const TextStyle(
                     color: black,
                     fontSize: 16,
@@ -145,7 +147,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                   height: 5,
                 ),
                 Text(
-                  'Seat Numbers: $busSeatNumberSelected ',
+                  'Seat Numbers: ${specificBusSeatNumber[widget.index]}',
                   style: const TextStyle(
                     color: black,
                     fontSize: 16,

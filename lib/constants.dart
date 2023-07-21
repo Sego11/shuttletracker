@@ -144,3 +144,9 @@ bool isFavIconClicked = false;
 String loggedUserID = '';
 
 List<String> busIDs = [];
+
+List specificBusName = [];
+List specificBusNumber = [];
+List specificBusDestination = [];
+List specificBusSeatNumber = [];
+List specificBusStart = [];

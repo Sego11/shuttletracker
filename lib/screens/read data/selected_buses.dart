@@ -1,37 +1,103 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/model/selected_bus_model.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
 
 class ReadData {
   Future getSelectedBuses() async {
+    selectedBusNames.clear();
+    specificBusDestination.clear();
+    specificBusNumber.clear();
+    specificBusStart.clear();
+    specificBusSeatNumber.clear();
+    specificBusName.clear();
+    addedBuses.clear();
     final document = await FirebaseFirestore.instance
         .collection('added buses')
-        .where('User ID', isEqualTo: loggedUserID)
+        .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     if (document.docs.isNotEmpty) {
-      List<String> selectedBusIDs = document.docs.single.get('Added Bus IDs');
+      final data = document.docs.single.data();
+      final selectedBusIDs = data['Added Bus IDs'];
 
-      selectedBusIDs.forEach(
-        (busId) async {
-          final document = await FirebaseFirestore.instance
-              .collection('buses')
-              .doc(busId)
-              .get();
-          final documentData = document.data()!;
+      for (var busId in selectedBusIDs) {
+        final document = await FirebaseFirestore.instance
+            .collection('buses')
+            .doc(busId)
+            .get();
+        final documentData = document.data()!;
 
-          final selectedBusData = SelectedBusModel(
-              name: documentData['Bus Name'],
-              number: documentData['Bus Number'],
-              start: documentData['Start'],
-              destination: documentData['Bus Name'],
-              seatNumber: documentData['Bus Name'],
-              id: documentData['Bus Name']);
+        final selectedBusData = SelectedBusModel(
+            name: documentData['Bus Name'],
+            number: documentData['Bus Number'],
+            start: documentData['Start'],
+            destination: documentData['Destination'],
+            seatNumber: documentData['Seat Number'],
+            id: documentData['Bus ID']);
 
-          
-        },
-      );
+        if (!selectedBusNames.contains(selectedBusData.name)) {
+          selectedBusNames.add(selectedBusData.name);
+          specificBusNumber.add(selectedBusData.number);
+          specificBusSeatNumber.add(selectedBusData.seatNumber);
+          specificBusStart.add(selectedBusData.start);
+          specificBusDestination.add(selectedBusData.destination);
+          specificBusName.add(selectedBusData.name);
+        }
+        if (!addedBuses.contains(selectedBusData.id)) {
+          addedBuses.add(selectedBusData.id);
+        }
+      }
     }
-    ;
+
+    return selectedBusNames;
+  }
+
+  Future getSpecificBusInfo() async {
+    specificBusDestination.clear();
+    specificBusNumber.clear();
+    specificBusStart.clear();
+    specificBusSeatNumber.clear();
+    specificBusName.clear();
+    selectedBusNames.clear();
+    addedBuses.clear();
+    final document = await FirebaseFirestore.instance
+        .collection('added buses')
+        .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    if (document.docs.isNotEmpty) {
+      final data = document.docs.single.data();
+      final selectedBusIDs = data['Added Bus IDs'];
+
+      for (var busId in selectedBusIDs) {
+        final document = await FirebaseFirestore.instance
+            .collection('buses')
+            .doc(busId)
+            .get();
+        final documentData = document.data()!;
+
+        final selectedBusData = SelectedBusModel(
+            name: documentData['Bus Name'],
+            number: documentData['Bus Number'],
+            start: documentData['Start'],
+            destination: documentData['Destination'],
+            seatNumber: documentData['Seat Number'],
+            id: documentData['Bus ID']);
+
+        if (!selectedBusNames.contains(selectedBusData.name)) {
+          selectedBusNames.add(selectedBusData.name);
+          specificBusNumber.add(selectedBusData.number);
+          specificBusSeatNumber.add(selectedBusData.seatNumber);
+          specificBusStart.add(selectedBusData.start);
+          specificBusDestination.add(selectedBusData.destination);
+          specificBusName.add(selectedBusData.name);
+        }
+        if (!addedBuses.contains(selectedBusData.id)) {
+          addedBuses.add(selectedBusData.id);
+        }
+      }
+    }
   }
 }

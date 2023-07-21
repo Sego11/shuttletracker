@@ -14,11 +14,6 @@ class BusScreen extends StatefulWidget {
 
 class _BusScreenState extends State<BusScreen> {
   //function to remove an object
-  void removeBus(String busName) {
-    setState(() {
-      selectedBusNames.remove(busName);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,32 +58,32 @@ class _BusScreenState extends State<BusScreen> {
                       ),
                     );
 
-                    if (result != null) {
-                      //prevents duplicates of bus names in selectedBusNames list
-                      if (!selectedBusNames.contains(result)) {
-                        setState(() {
-                          selectedBusNames.add(result);
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            content: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 14.0),
-                              child: Text(
-                                '$result had already been added.',
-                                style: const TextStyle(height: 1.3),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    }
+                    // if (result != null) {
+                    //prevents duplicates of bus names in selectedBusNames list
+                    //   if (!selectedBusNames.contains(result)) {
+                    //     setState(() {
+                    //       selectedBusNames.add(result);
+                    //     });
+                    //   } else {
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       SnackBar(
+                    //         behavior: SnackBarBehavior.floating,
+                    //         shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(20),
+                    //         ),
+                    //         content: Padding(
+                    //           padding:
+                    //               const EdgeInsets.symmetric(horizontal: 14.0),
+                    //           child: Text(
+                    //             '$result had already been added.',
+                    //             style: const TextStyle(height: 1.3),
+                    //             textAlign: TextAlign.center,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   }
+                    // }
                   },
             icon: const Icon(
               Icons.add,
@@ -118,7 +113,7 @@ class _BusScreenState extends State<BusScreen> {
           ),
         ),
       ),
-      body: Body(selectedBusNames: selectedBusNames, removeBus: removeBus),
+      body: Body(),
     );
   }
 }
