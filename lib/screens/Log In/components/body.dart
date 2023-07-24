@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/Components/body.dart';
 import 'package:shuttle_tracker_app/screens/password/forgot%20password/forgot_password_screen.dart';
@@ -29,7 +30,7 @@ class _BodyState extends State<Body> {
     );
 
     isSignUpClicked = false;
-    loggedUserID =  FirebaseAuth.instance.currentUser!.uid;
+    loggedUserID = FirebaseAuth.instance.currentUser!.uid;
   }
 
   @override
@@ -94,6 +95,12 @@ class _BodyState extends State<Body> {
             ),
             const SizedBox(height: 14),
             TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z@.0-9]'),
+                ),
+                LengthLimitingTextInputFormatter(30)
+              ],
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               autofocus: false,

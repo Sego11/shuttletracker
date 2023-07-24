@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 
 class Body extends StatefulWidget {
@@ -31,22 +32,70 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
+//validation
   Future signUp() async {
-    if (passwordConfirmed()) {
-      setState(() {
-        isSignUpClicked = true;
-      });
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+    try {
+      if (passwordConfirmed()) {
+        setState(() {
+          isSignUpClicked = true;
+        });
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
 
-      loggedUserID = FirebaseAuth.instance.currentUser!.uid;
+        loggedUserID = FirebaseAuth.instance.currentUser!.uid;
 
-      await FirebaseFirestore.instance.collection('users').add({
-        'User ID': loggedUserID,
-        'Email': _emailController.text.trim(),
-      });
+        await FirebaseFirestore.instance.collection('users').add({
+          'User ID': loggedUserID,
+          'Email': _emailController.text.trim(),
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showDialog(
+          context: context,
+          builder: ((context) {
+            return AlertDialog(
+              content: Text(
+                e.message.toString(),
+              ),
+            );
+          }),
+        );
+      } else if (e.code == 'email-already-in-use') {
+        showDialog(
+          context: context,
+          builder: ((context) {
+            return AlertDialog(
+              content: Text(
+                e.message.toString(),
+              ),
+            );
+          }),
+        );
+      } else if (e.code == 'invalid-email') {
+        showDialog(
+          context: context,
+          builder: ((context) {
+            return AlertDialog(
+              content: Text(
+                e.message.toString(),
+              ),
+            );
+          }),
+        );
+      }
+    }
+  }
+
+  bool isTextFieldChecked() {
+    if (_emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty &&
+        _confirmPasswordController.text.isNotEmpty) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -116,6 +165,12 @@ class _BodyState extends State<Body> {
               height: 5,
             ),
             TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z.@0-9]'),
+                ),
+                LengthLimitingTextInputFormatter(30)
+              ],
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               autofocus: false,
@@ -247,6 +302,29 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: signUp,
+              //() {
+              //   if (isTextFieldChecked()) {
+
+              //   } else {
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       SnackBar(
+              //         duration: const Duration(seconds: 2),
+              //         behavior: SnackBarBehavior.floating,
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(20),
+              //         ),
+              //         content: const Padding(
+              //           padding: EdgeInsets.symmetric(horizontal: 14.0),
+              //           child: Text(
+              //             'A Textfield cannot be empty',
+              //             style: TextStyle(height: 1.3),
+              //             textAlign: TextAlign.center,
+              //           ),
+              //         ),
+              //       ),
+              //     );
+              //   }
+              // },
               // onTap: () {
               //   Navigator.push(
               //     context,
@@ -264,6 +342,7 @@ class _BodyState extends State<Body> {
                   border: Border.all(color: black, width: 1),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+                // ignore: prefer_const_constructors
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

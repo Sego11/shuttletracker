@@ -11,8 +11,10 @@ class LogInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Body(
-        showSignUpScreen: showSignUpScreen,
+      body: SingleChildScrollView(
+        child: Body(
+          showSignUpScreen: showSignUpScreen,
+        ),
       ),
     );
   }

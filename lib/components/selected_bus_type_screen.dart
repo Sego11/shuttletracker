@@ -304,15 +304,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
           children: [
             GestureDetector(
               onTap: () {
-                setState(() {
-                  int index = busNames.indexOf(widget.selectedBusName);
-                  if (index != -1) {
-                    busNameSelected = busNames[index];
-                    busNumberSelected = faveBusNumber[index];
-                    busDestinationSelected = faveDestination[index];
-                    busSeatNumberSelected = faveSeatNumber[index];
-                  }
-                });
+              
                 displayBusInfo();
               },
               child: Container(

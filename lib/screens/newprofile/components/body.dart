@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
@@ -25,8 +26,7 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
-  Future createProfile() async { 
-    
+  Future createProfile() async {
     final document = await FirebaseFirestore.instance
         .collection('users')
         .where('User ID', isEqualTo: loggedUserID)
@@ -41,15 +41,18 @@ class _BodyState extends State<Body> {
       int.parse(_studentIDController.text.trim()),
     );
 
-   
-
     // ignore: use_build_context_synchronously
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       // ignore: prefer_const_constructors
+    //       builder: (((context) => TabView())),
+    //     ));
+
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          // ignore: prefer_const_constructors
-          builder: (((context) => TabView())),
-        ));
+      context,
+      MaterialPageRoute(builder: (context) => TabView()),
+    );
   }
 
   Future addUserDetails(
@@ -63,6 +66,17 @@ class _BodyState extends State<Body> {
       'Phone Number': phoneNumber,
       'Student ID': studentId,
     });
+  }
+
+  bool istextfieldchecked() {
+    if (_emailController.text.isNotEmpty &&
+        _nameController.text.isNotEmpty &&
+        _phoneNumberController.text.isNotEmpty &&
+        _studentIDController.text.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -111,6 +125,12 @@ class _BodyState extends State<Body> {
           ),
           SizedBox(
             child: TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z\s]'),
+                ),
+                LengthLimitingTextInputFormatter(30)
+              ],
               controller: _nameController,
               decoration: InputDecoration(
                 fillColor: white,
@@ -148,6 +168,12 @@ class _BodyState extends State<Body> {
           ),
           SizedBox(
             child: TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z.@0-9 ]'),
+                ),
+                LengthLimitingTextInputFormatter(30)
+              ],
               controller: _emailController,
               decoration: InputDecoration(
                 fillColor: white,
@@ -183,6 +209,12 @@ class _BodyState extends State<Body> {
           ),
           SizedBox(
             child: TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[0-9]'),
+                ),
+                LengthLimitingTextInputFormatter(10)
+              ],
               controller: _phoneNumberController,
               decoration: InputDecoration(
                 fillColor: white,
@@ -218,6 +250,12 @@ class _BodyState extends State<Body> {
           ),
           SizedBox(
             child: TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[0-9]'),
+                ),
+                LengthLimitingTextInputFormatter(8)
+              ],
               controller: _studentIDController,
               decoration: InputDecoration(
                 fillColor: white,
@@ -243,15 +281,50 @@ class _BodyState extends State<Body> {
             height: 65,
           ),
           GestureDetector(
-            onTap: createProfile,
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: ((context) => const TabView()),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              if (istextfieldchecked()) {
+                createProfile();
+
+                Navigator.pop(
+                  context,
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: const Duration(seconds: 2),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      content: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 14.0),
+                        child: Text(
+                          'Profile Created Successfully!',
+                          style: TextStyle(height: 1.3),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    content: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14.0),
+                      child: Text(
+                        'A Textfield cannot be empty',
+                        style: TextStyle(height: 1.3),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
             child: Container(
               height: 63,
               width: 375,

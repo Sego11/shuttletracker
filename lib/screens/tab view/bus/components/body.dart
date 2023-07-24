@@ -27,8 +27,6 @@ class _BodyState extends State<Body> {
         .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    print(addedBuses);
-
     if (document.docs.isNotEmpty) {
       final id = document.docs.single.id;
       await FirebaseFirestore.instance

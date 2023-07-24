@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/components/body.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 class BusScreen extends StatefulWidget {
   const BusScreen({super.key});
@@ -14,80 +16,65 @@ class BusScreen extends StatefulWidget {
 
 class _BusScreenState extends State<BusScreen> {
   //function to remove an object
+  ReadData readData = ReadData();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        height: 60,
-        width: 60,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: primary,
-          border: Border.all(
-            color: black,
-            width: 1,
+      floatingActionButton: FutureBuilder(
+        future: readData.getSelectedBuses(),
+        builder: (context, snapshot) => Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: primary,
+            border: Border.all(
+              color: black,
+              width: 1,
+            ),
           ),
-        ),
-        child: Center(
-          child: IconButton(
-            onPressed: selectedBusNames.length == busNames.length
-                ? () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        content: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 14.0),
-                          child: Text(
-                            'All buses have been selected. Remove buses to access Available Bus List',
-                            style: TextStyle(height: 1.3),
-                            textAlign: TextAlign.center,
+          child: Center(
+            child: IconButton(
+              onPressed: selectedBusNames.length == busNames.length
+                  ? () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          content: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 14.0),
+                            child: Text(
+                              'All buses have been selected. Remove buses to access Available Bus List',
+                              style: TextStyle(height: 1.3),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }
-                : () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddingBusScreen(),
-                      ),
-                    );
+                      );
+                    }
+                  : () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddingBusScreen(),
+                        ),
+                      );
 
-                    // if (result != null) {
-                    //prevents duplicates of bus names in selectedBusNames list
-                    //   if (!selectedBusNames.contains(result)) {
-                    //     setState(() {
-                    //       selectedBusNames.add(result);
-                    //     });
-                    //   } else {
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       SnackBar(
-                    //         behavior: SnackBarBehavior.floating,
-                    //         shape: RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.circular(20),
-                    //         ),
-                    //         content: Padding(
-                    //           padding:
-                    //               const EdgeInsets.symmetric(horizontal: 14.0),
-                    //           child: Text(
-                    //             '$result had already been added.',
-                    //             style: const TextStyle(height: 1.3),
-                    //             textAlign: TextAlign.center,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     );
-                    //   }
-                    // }
-                  },
-            icon: const Icon(
-              Icons.add,
-              size: 30,
+                      if (result) {
+                        setState(() {
+                          readData.getSelectedBuses();
+                        });
+                      } else if (result == null) {
+                        print('error');
+                      }
+                    },
+              icon: const Icon(
+                Icons.add,
+                size: 30,
+              ),
             ),
           ),
         ),

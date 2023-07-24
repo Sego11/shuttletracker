@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/map/map.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/settings_screen.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/favorites/favorites_screen.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/home/home_screen.dart';
 
 // ignore: must_be_immutable
 class TabView extends StatefulWidget {
@@ -26,9 +25,9 @@ class _TabViewState extends State<TabView> {
           controller: pageController,
           physics: const NeverScrollableScrollPhysics(),
           children: const [
-            HomeScreen(),
+            MapScreen(),
             BusScreen(),
-            FavouriteScreen(),
+            // FavouriteScreen(),
             SettingsScreen(),
           ],
         ),
@@ -57,11 +56,11 @@ class _TabViewState extends State<TabView> {
                 label: 'Buses',
                 activeIcon: Icon(Icons.directions_bus_outlined),
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.star_outline),
-                label: 'Favourites',
-                activeIcon: Icon(Icons.star),
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.star_outline),
+              //   label: 'Favourites',
+              //   activeIcon: Icon(Icons.star),
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings_outlined),
                 label: 'Settings',

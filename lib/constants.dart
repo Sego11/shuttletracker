@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/faqs/faqs.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/appinfo/app_info.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/changepassword/change_password.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/editprofile/edit_profile.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/profile_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/rate%20us/rate_us.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/rules%20and%20terms/rules_and_terms.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/support/support.dart';
 
 const white = Color(0xffffffff);
 const black = Colors.black;
@@ -31,7 +34,7 @@ List<String> selectedBusNames = [];
 
 List<String> settingsButtonText = [
   'Profile',
-  'Dark theme',
+  // 'Dark theme',
   'Rules and Terms',
   "FAQ's",
   'Rate us',
@@ -43,10 +46,10 @@ List settingsIcon = [
     'assets/images/profile.png',
     scale: 1.2,
   ),
-  Image.asset(
-    'assets/images/theme.png',
-    scale: 1.2,
-  ),
+  // Image.asset(
+  //   'assets/images/theme.png',
+  //   scale: 1.2,
+  // ),
   Image.asset(
     'assets/images/terms.png',
     scale: 1.2,
@@ -67,11 +70,11 @@ List settingsIcon = [
 
 List<Widget> settingsscreens = [
   const ProfileScreen(),
-  NewProfileScreen(),
-  NewProfileScreen(),
-  NewProfileScreen(),
-  NewProfileScreen(),
-  NewProfileScreen(),
+  // NewProfileScreen(),
+  const RulesAndTermsScreen(),
+  const FaqsScreen(),
+  const RateUsScreen(),
+  const SupportScreen(),
 ];
 
 int selectedBusNameCount = 0;

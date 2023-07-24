@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/newprofile/components/body.dart';
@@ -27,7 +29,9 @@ class NewProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const Body(),
+      body: SingleChildScrollView(
+        child: Body(),
+      ),
     );
   }
 }

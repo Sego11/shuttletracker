@@ -23,6 +23,7 @@ class GetBusName extends StatelessWidget {
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           dynamic data = snapshot.data!.data() as dynamic;
+
           return Text(
             '${data['Bus Name']}',
             style: const TextStyle(

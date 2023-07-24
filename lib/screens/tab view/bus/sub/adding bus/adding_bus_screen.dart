@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/read%20data/get_bus_name.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import '../../../../../components/bus_type.dart';
 
 class AddingBusScreen extends StatefulWidget {
@@ -34,39 +33,53 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
   }
 
   Future addBuses(int index) async {
-    print(busIDs);
     if (!addedBuses.contains(busIDs[index])) {
       addedBuses.add(busIDs[index]);
-    } else {
-      print('Error');
-    }
-    try {
-      final document = await FirebaseFirestore.instance
-          .collection('added buses')
-          .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .get();
-
-      if (document.docs.isNotEmpty) {
-        // print(loggedUserID);
-
-        final docID = document.docs.single.id;
-        await FirebaseFirestore.instance
+      try {
+        final document = await FirebaseFirestore.instance
             .collection('added buses')
-            .doc(docID)
-            .update({
-          'Added Bus IDs': addedBuses,
-        });
-      } else {
-        // print(loggedUserID);
-        await FirebaseFirestore.instance.collection('added buses').add({
-          'User ID': FirebaseAuth.instance.currentUser!.uid,
-          'Added Bus IDs': addedBuses,
-        });
+            .where('User ID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        if (document.docs.isNotEmpty) {
+          // print(loggedUserID);
+
+          final docID = document.docs.single.id;
+          await FirebaseFirestore.instance
+              .collection('added buses')
+              .doc(docID)
+              .update({
+            'Added Bus IDs': addedBuses,
+          });
+        } else {
+          // print(loggedUserID);
+          await FirebaseFirestore.instance.collection('added buses').add({
+            'User ID': FirebaseAuth.instance.currentUser!.uid,
+            'Added Bus IDs': addedBuses,
+          });
+        }
+
+        Navigator.pop(context, true);
+      } catch (e) {
+        print(e.toString());
       }
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BusScreen()));
-    } catch (e) {
-      print(e.toString());
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.0),
+            child: Text(
+              'Bus has already been added',
+              style: TextStyle(height: 1.3),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
     }
   }
 

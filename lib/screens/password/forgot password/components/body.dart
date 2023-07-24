@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
@@ -28,11 +30,10 @@ class _BodyState extends State<Body> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MailCheckScreen(),
+          builder: (context) => const MailCheckScreen(),
         ),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
       showDialog(
         context: context,
         builder: ((context) {
@@ -182,7 +183,6 @@ class _BodyState extends State<Body> {
           const SizedBox(
             height: 105,
           ),
-        
         ],
       ),
     );
