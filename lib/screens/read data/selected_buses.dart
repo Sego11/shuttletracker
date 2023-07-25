@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/model/selected_bus_model.dart';
+import 'package:shuttle_tracker_app/model/user.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/editprofile/component/body.dart';
+
+List<dynamic> allUsers = [];
 
 class ReadData {
   Future getSelectedBuses() async {
@@ -98,6 +102,33 @@ class ReadData {
           addedBuses.add(selectedBusData.id);
         }
       }
+    }
+  }
+
+  Future getUserData() async {
+    final document = await FirebaseFirestore.instance
+        .collection('users')
+        .where('User ID', isEqualTo: loggedUserID)
+        .get();
+
+    if (document.docs.isNotEmpty) {
+      final docID = document.docs.single.id;
+
+      final querySnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(docID).get();
+
+      final documentData = querySnapshot.data()!;
+
+      final userData = UserData(
+          name: documentData['Name'],
+          studentId: documentData['Student ID'],
+          phoneNumber: documentData['Phone Number'],
+          email: documentData['Email'],
+          pic: documentData['Pic']);
+
+      profileFileURL = userData.pic;
+
+      allUsers.add(userData);
     }
   }
 }

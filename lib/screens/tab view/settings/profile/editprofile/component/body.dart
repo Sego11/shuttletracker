@@ -1,9 +1,15 @@
+// ignore_for_file: prefer_const_constructors, avoid_print
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+
+import '../../profile_screen.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -12,7 +18,7 @@ class Body extends StatefulWidget {
   State<Body> createState() => _BodyState();
 }
 
-String profileFileName = '';
+String profileFileURL = '';
 String profileFilePath = '';
 
 class _BodyState extends State<Body> {
@@ -37,6 +43,8 @@ class _BodyState extends State<Body> {
         .get();
 
     final docID = document.docs.single.id;
+
+    await uploadImage(profileFilePath);
 
     await addUserDetails(
       docID,
@@ -67,6 +75,7 @@ class _BodyState extends State<Body> {
       'Email': email,
       'Phone Number': phoneNumber,
       'Student ID': studentId,
+      'Pic': profileFileURL,
     });
   }
 
@@ -81,17 +90,33 @@ class _BodyState extends State<Body> {
     }
   }
 
-  // void addImage() async {
-  //   final result = await FilePicker.platform.pickFiles(
-  //       allowedExtensions: ['jpeg', 'jpg', 'png','heic'],
-  //       type: FileType.custom,
-  //       allowMultiple: false);
+  void addImage() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowedExtensions: ['jpeg', 'jpg', 'png', 'heic'],
+        type: FileType.custom,
+        allowMultiple: false);
 
-  //   if (result!.files.isNotEmpty) {
-  //     profileFileName = result.files.single.name;
-  //     profileFilePath = result.files.single.path!;
-  //   }
-  // }
+    if (result!.files.isNotEmpty) {
+      setState(() {
+        profileFilePath = result.files.single.path!;
+      });
+    }
+  }
+
+  Future uploadImage(String filePath) async {
+    try {
+      File file = File(filePath);
+      final querySnapshot = await FirebaseStorage.instance
+          .ref('$loggedUserID/Profile')
+          .child('profile')
+          .putFile(file);
+
+      profileFileURL = await querySnapshot.ref.getDownloadURL();
+      print(profileFileURL);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,16 +133,34 @@ class _BodyState extends State<Body> {
           ),
           Row(
             children: [
-              profileFilePath == ''
-                  ? Image.asset('assets/images/person.png')
-                  : Image.file(
-                      File(profileFilePath),
-                    ),
+              (profileFilePath != '' && profileFileURL != '')
+                  ? Container(
+                      height: 75,
+                      width: 75,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: FileImage(File(profileFilePath)),
+                            fit: BoxFit.cover,
+                          )),
+                    )
+                  : profileFileURL != ''
+                      ? Container(
+                          height: 75,
+                          width: 75,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(profileFileURL),
+                                fit: BoxFit.cover,
+                              )),
+                        )
+                      : Image.asset('assets/images/person.png'),
               const SizedBox(
                 width: 22,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: addImage,
                 child: Text(
                   'Photo Upload+',
                   style: TextStyle(
@@ -147,7 +190,7 @@ class _BodyState extends State<Body> {
             child: TextField(
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
-                  RegExp(r'[a-zA-Z@]'),
+                  RegExp(r'[a-zA-Z\s]'),
                 ),
                 LengthLimitingTextInputFormatter(30)
               ],
@@ -327,22 +370,25 @@ class _BodyState extends State<Body> {
                 if (istextfieldchecked()) {
                   editProfile();
 
-                  Navigator.pop(
+                  Navigator.push(
                     context,
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: const Duration(seconds: 2),
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        content: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 14.0),
-                          child: Text(
-                            'Profile Updated Successfully!',
-                            style: TextStyle(height: 1.3),
-                            textAlign: TextAlign.center,
-                          ),
+                    MaterialPageRoute(
+                      builder: ((context) => const ProfileScreen()),
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: const Duration(seconds: 2),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      content: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 14.0),
+                        child: Text(
+                          'Profile Updated Successfully!',
+                          style: TextStyle(height: 1.3),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),

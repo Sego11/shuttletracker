@@ -1,7 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/profile_screen_button.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/sign_up_screen.dart';
+import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
+import '../editprofile/component/body.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key});
@@ -142,27 +146,36 @@ class Body extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/person.png',
-                    scale: 1.2,
-                  ),
+                  profileFileURL == ''
+                      ? Image.asset('assets/images/person.png')
+                      : Container(
+                          height: 67,
+                          width: 67,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(profileFileURL),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
                   const SizedBox(
                     width: 20,
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        'Samuel Baffoe',
+                        allUsers[0].name,
                         style: TextStyle(
                           color: black,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      SizedBox(height: 5),
                       Text(
-                        '0540408089',
+                        allUsers[0].studentId.toString(),
                         style: TextStyle(
                           color: black,
                           fontSize: 16,

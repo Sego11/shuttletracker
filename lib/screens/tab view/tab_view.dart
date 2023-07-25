@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/map/map.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/settings_screen.dart';
@@ -16,6 +17,13 @@ class _TabViewState extends State<TabView> {
   final PageController pageController = PageController();
 
   ValueNotifier<int> currentIndexNotifier = ValueNotifier<int>(0);
+
+  ReadData readData = ReadData();
+  @override
+  void initState() {
+    readData.getUserData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
