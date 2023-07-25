@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';

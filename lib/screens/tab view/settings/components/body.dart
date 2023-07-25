@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
+import 'package:shuttle_tracker_app/screens/auth/main_page.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/settings/profile/editprofile/component/body.dart';
 import '../../../../components/settings_page.dart';
 
 class Body extends StatelessWidget {
@@ -43,15 +45,16 @@ class Body extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        profileFileURL = '';
+                        profileFilePath = '';
                         selectedBusNames.clear();
                         FirebaseAuth.instance.signOut();
-                        Navigator.pop(context);
-                        // Navigator.pushAndRemoveUntil(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => const LogInScreen(),
-                        //     ),
-                        //     (route) => false);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MainPage(),
+                            ),
+                            (route) => false);
                       },
                       child: Container(
                         height: 63,
