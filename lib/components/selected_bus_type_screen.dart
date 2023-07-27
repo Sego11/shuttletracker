@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/map%20view/map_view.dart';
 
+// ignore: must_be_immutable
 class SelectedBusType extends StatefulWidget {
   final VoidCallback screen;
   final String selectedBusName;
@@ -32,74 +33,6 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
               children: [
                 Text(
                   '${specificBusName[widget.index]} Bus',
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isFavIconClicked = !isFavIconClicked;
-                    });
-                    Navigator.pop(context);
-
-                    if (isFavIconClicked == true) {
-                      favBusList.add(widget.selectedBusName);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: const Duration(
-                            seconds: 2,
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          content: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 14),
-                            child: Text(
-                              '${specificBusName[widget.index]} added to favourites',
-                              style: const TextStyle(
-                                height: 1.3,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      );
-                    } else {
-                      int index = favBusList.indexOf(widget.selectedBusName);
-                      if (index != -1) {
-                        favBusList.removeAt(index);
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        duration: const Duration(
-                          seconds: 2,
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                        content: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          child: Text(
-                            '${specificBusName[widget.index]} has been removed from favourites',
-                            style: const TextStyle(
-                              height: 1.3,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ));
-                    }
-                  },
-                  child: isFavIconClicked
-                      ? const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        )
-                      : const Icon(
-                          Icons.star_border,
-                          color: Colors.amber,
-                        ),
                 ),
               ],
             ),
@@ -304,7 +237,6 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
           children: [
             GestureDetector(
               onTap: () {
-              
                 displayBusInfo();
               },
               child: Container(

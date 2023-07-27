@@ -6,6 +6,7 @@ import 'package:shuttle_tracker_app/screens/splash%20screen/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
 
   runApp(MaterialApp(

@@ -5,7 +5,6 @@ import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/components/body.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 class BusScreen extends StatefulWidget {
   const BusScreen({super.key});
