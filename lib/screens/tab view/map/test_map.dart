@@ -20,62 +20,19 @@ class _TestMapState extends State<TestMap> {
 
   DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   Marker? _destinationMarker;
-  StreamSubscription<DatabaseEvent>?
-      _destinationStreamSubscription; // Store the stream subscription
+  Marker? _commercialMarker;
+
+  // StreamSubscription<DatabaseEvent>?
+  //     _destinationStreamSubscription;
+  // StreamSubscription<DatabaseEvent>?
+  //     _commercialStreamSubscription; // Store the stream subscription
 
   @override
   void initState() {
     super.initState();
     _getLocation();
+    _getCommercialCoordinates();
     _getDestinationCoordinates();
-  }
-
-  @override
-  void dispose() {
-    // Cancel the stream subscription when the widget is disposed
-    _destinationStreamSubscription?.cancel();
-    super.dispose();
-  }
-
-  void _listenToDestinationCoordinates() {
-    DatabaseReference destinationRef =
-        _databaseRef.child('your_destination_node');
-
-    // Start listening to changes in the destination coordinates
-    _destinationStreamSubscription = destinationRef.onValue.listen((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (data != null) {
-        double? destinationLatitude = data['f_latitude'] as double?;
-        double? destinationLongitude = data['f_longitude'] as double?;
-
-        if (destinationLatitude != null && destinationLongitude != null) {
-          // Now, you have the updated destination latitude and longitude.
-          // You can use this data to update the marker on the map or draw a route from the current location to the destination location if you want.
-
-          if (_mapController != null) {
-            // Move the camera to the bus's updated destination location
-            _mapController!.animateCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  target: LatLng(destinationLatitude, destinationLongitude),
-                  zoom: 15.0,
-                ),
-              ),
-            );
-
-            // Update the marker for the bus destination
-            setState(() {
-              _destinationMarker = Marker(
-                markerId: MarkerId('bus_destination'),
-                position: LatLng(destinationLatitude, destinationLongitude),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueRed),
-              );
-            });
-          }
-        }
-      }
-    });
   }
 
   void getLocation() async {
@@ -157,12 +114,44 @@ class _TestMapState extends State<TestMap> {
     }
 
     _currentLocation = await location.getLocation();
-    print(
-        "Current Location: ${_currentLocation?.latitude}, ${_currentLocation?.longitude}");
+    // print(
+    //     "Current Location: ${_currentLocation?.latitude}, ${_currentLocation?.longitude}");
+  }
+
+  Future<void> _getCommercialCoordinates() async {
+    DatabaseReference commercialRef = _databaseRef.child('GPS');
+
+    // Set up a stream to listen for changes in the commercial coordinates
+    commercialRef.onValue.listen((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+
+      if (data != null) {
+        double? commercialLatitude = data['f_latitude'] as double?;
+        double? commercialLongitude = data['f_longitude'] as double?;
+
+        if (commercialLatitude != null && commercialLongitude != null) {
+          // Now, you have the updated commercial latitude and longitude.
+          // You can use this data to update the marker on the map or draw a route from the current location to the commercial location if you want.
+
+          if (_mapController != null) {
+            // Update the marker for the commercial location
+            setState(() {
+              _commercialMarker = Marker(
+                markerId: MarkerId('commercial_location'),
+                position: LatLng(commercialLatitude, commercialLongitude),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueOrange,
+                ),
+              );
+            });
+          }
+        }
+      }
+    });
   }
 
   Future<void> _getDestinationCoordinates() async {
-    DatabaseReference destinationRef = _databaseRef.child('GPS');
+    DatabaseReference destinationRef = _databaseRef.child('Commercial');
 
     // Set up a stream to listen for changes in the destination coordinates
     destinationRef.onValue.listen((event) {
@@ -193,7 +182,7 @@ class _TestMapState extends State<TestMap> {
                 markerId: MarkerId('bus_destination'),
                 position: LatLng(destinationLatitude, destinationLongitude),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueRed),
+                    BitmapDescriptor.hueBlue),
               );
             });
           }
@@ -213,7 +202,8 @@ class _TestMapState extends State<TestMap> {
               southwest: LatLng(6.599917, -1.748450),
             )),
             initialCameraPosition: CameraPosition(
-              target: LatLng(0, 0), // Placeholder initial camera position
+              target: LatLng(
+                  6.66895, -1.57476), // Placeholder initial camera position
               zoom: 15.0,
             ),
             onMapCreated: (GoogleMapController controller) {
@@ -229,8 +219,9 @@ class _TestMapState extends State<TestMap> {
                       BitmapDescriptor.hueBlue),
                 ),
               // Add a marker for the bus destination using destinationLatitude and destinationLongitude
-              if (_destinationMarker != null)
-                _destinationMarker!, // Show the bus destination marker if it's not null
+              if (_destinationMarker != null) _destinationMarker!,
+              if (_commercialMarker != null)
+                _commercialMarker!, // Show the bus destination marker if it's not null
             },
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
