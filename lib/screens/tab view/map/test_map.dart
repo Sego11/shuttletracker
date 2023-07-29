@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_final_fields, use_key_in_widget_constructors, library_private_types_in_public_api, unused_element, prefer_const_constructors, implementation_imports, depend_on_referenced_packages
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class TestMap extends StatefulWidget {
   final LatLng? initialSelectedPosition;
 
-  const TestMap({super.key, this.initialSelectedPosition});
+  const TestMap({Key? key, this.initialSelectedPosition}) : super(key: key);
 
   @override
   _TestMapState createState() => _TestMapState();
@@ -23,6 +21,10 @@ class _TestMapState extends State<TestMap> {
   DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   Marker? _destinationMarker;
   Marker? _commercialMarker;
+
+  // Coordinates for the fixed poly line
+  LatLng coordinate1 = LatLng(6.6691, -1.5676);
+  LatLng coordinate2 = LatLng(6.6704, -1.5742);
 
   @override
   void initState() {
@@ -131,10 +133,17 @@ class _TestMapState extends State<TestMap> {
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueAzure),
                 ),
-              // Add a marker for the bus destination using destinationLatitude and destinationLongitude
               if (_destinationMarker != null) _destinationMarker!,
-              if (_commercialMarker != null)
-                _commercialMarker!, // Show the bus destination marker if it's not null
+              if (_commercialMarker != null) _commercialMarker!,
+            },
+            polylines: {
+              // Polyline for the fixed line between the two coordinates
+              Polyline(
+                polylineId: PolylineId('fixed_polyline'),
+                color: Colors.red,
+                width: 5,
+                points: [coordinate1, coordinate2],
+              ),
             },
             myLocationEnabled: true,
             myLocationButtonEnabled: false,

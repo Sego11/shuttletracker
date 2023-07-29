@@ -4,9 +4,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Body extends StatefulWidget {
+  final String busName;
   final LatLng? initialSelectedPostion;
   const Body(
-      {Key? key, this.initialSelectedPostion = const LatLng(6.66891, -1.57455)})
+      {Key? key, this.initialSelectedPostion = const LatLng(6.66891, -1.57455), required this.busName})
       : super(key: key);
   @override
   State<Body> createState() => _BodyState();
@@ -31,6 +32,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       setState(() {});
     });
   }
+
+  // if(widget.busName == 'Commercial'){
+  //
+  // }else if(widget.busName =='Brunei'){}
 
   @override
   Widget build(BuildContext context) {

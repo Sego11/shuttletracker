@@ -4,7 +4,8 @@ import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/map%20view/component/body.dart';
 
 class MapView extends StatelessWidget {
-  const MapView({super.key});
+  final String busName;
+  const MapView({super.key, required this.busName});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class MapView extends StatelessWidget {
             ),
           ),
         ],
-        title: Text(busNameSelected),
+        title: Text(busName),
         titleTextStyle: const TextStyle(
           color: black,
           fontSize: 20,
@@ -32,7 +33,7 @@ class MapView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Body(),
+      body: Body(busName: busName,),
     );
   }
 }

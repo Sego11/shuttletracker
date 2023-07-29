@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
+import 'package:shuttle_tracker_app/livemap.dart';
 import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
+import 'package:shuttle_tracker_app/screens/tab%20view/map/polytest_map.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/map/test_map.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/settings_screen.dart';
 
@@ -35,7 +37,7 @@ class _TabViewState extends State<TabView> {
           controller: pageController,
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            TestMap(),
+            PolyTestMap(),
             BusScreen(),
             SettingsScreen(),
           ],
