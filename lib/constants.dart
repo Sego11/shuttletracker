@@ -16,6 +16,7 @@ const purple = Color(0xff800080);
 const header = Color(0xffF0F1F5);
 const red = Color(0xffFF1313);
 const bottomColor = Color(0xff808080);
+const String google_api_key = "AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM";
 
 late double width;
 late double height;

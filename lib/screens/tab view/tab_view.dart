@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
@@ -34,10 +34,9 @@ class _TabViewState extends State<TabView> {
         child: PageView(
           controller: pageController,
           physics: const NeverScrollableScrollPhysics(),
-          children:  [
+          children: [
             TestMap(),
             BusScreen(),
-            // FavouriteScreen(),
             SettingsScreen(),
           ],
         ),
