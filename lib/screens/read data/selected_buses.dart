@@ -34,23 +34,23 @@ class ReadData {
         .update({'Bus ID': id});
   }
 
-          Future deleteBus(int index) async {
-      try {
-        await FirebaseFirestore.instance
-            .collection('buses')
-            .doc(allBuses[index].id)
-            .delete()
-            .catchError((err) {
-          print(throw Exception(err.toString()));
-        });
-      } on FirebaseException catch (error) {
-        print(error.toString());
-      } catch (e) {
-        print(e.toString());
-      }
+  Future deleteBus(int index) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('buses')
+          .doc(allBuses[index].id)
+          .delete()
+          .catchError((err) {
+        print(throw Exception(err.toString()));
+      });
+    } on FirebaseException catch (error) {
+      print(error.toString());
+    } catch (e) {
+      print(e.toString());
     }
+  }
 
-    Future updateBus(
+  Future updateBus(
     String busId,
     String name,
     String number,
@@ -58,14 +58,14 @@ class ReadData {
     int seatNumber,
     String start,
   ) async {
-    final document = await FirebaseFirestore.instance.collection('buses').doc(busId).update({
+    final document =
+        await FirebaseFirestore.instance.collection('buses').doc(busId).update({
       'Bus Name': name,
       'Bus Number': number,
       'Destination': destination,
       'Seat Number': seatNumber,
       'Start': start,
     });
-
   }
 
   Future getSelectedBuses() async {
@@ -211,7 +211,6 @@ class ReadData {
               destination: documentData['Destination']);
           allBuses.add(bus);
           busNames.add(bus.name);
-          print(busNames);
         }
       }
     } catch (e) {

@@ -32,7 +32,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  '${specificBusName[widget.index]} Bus',
+                  '${specificBusName[widget.index]}',
                 ),
               ],
             ),
@@ -93,15 +93,20 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      // Navigator.pop(context);
+                      Navigator.pop(context);
                       // setState(() {
                       //   int index = busNames.indexOf(widget.selectedBusName);
                       //   if (index != -1) {
                       //     busNameSelected = busNames[index];
                       //   }
                       // });
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: ((context) => MapView(busName: specificBusName[widget.index],))));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) =>
+                              MapView(busName: specificBusName[widget.index])),
+                        ),
+                      );
                       //
                     },
                     child: Text(

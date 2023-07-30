@@ -1,41 +1,177 @@
-import 'dart:developer';
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+
+const String kGoogleApiKey = 'AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM';
 
 class Body extends StatefulWidget {
+  final LatLng? initialSelectedPosition;
   final String busName;
-  final LatLng? initialSelectedPostion;
-  const Body(
-      {Key? key, this.initialSelectedPostion = const LatLng(6.66891, -1.57455), required this.busName})
-      : super(key: key);
+
+  const Body({
+    Key? key,
+    this.initialSelectedPosition,
+    required this.busName,
+  }) : super(key: key);
+
   @override
-  State<Body> createState() => _BodyState();
+  _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> with TickerProviderStateMixin {
-  late GoogleMapController mapController;
-  late AnimationController lifter;
-  late LatLng selectedPosition;
+class _BodyState extends State<Body> {
+  GoogleMapController? mapController;
+  LatLng selectedPosition = LatLng(6.6745, -1.5716); // Default position
+  LatLng? currentLocation;
+
+  DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+  Marker? _destinationMarker;
+  Marker? _commercialMarker;
+
+  PolylinePoints _polylinePoints = PolylinePoints();
+  List<LatLng> _polylineCoordinates = [];
 
   @override
   void initState() {
     super.initState();
+    widget.busName == 'Commercial Bus' ? _getCommercialCoordinates() : null;
+    widget.busName == 'Brunei Bus' ? _getBruneiCoordinates() : null;
+  }
 
-    selectedPosition =
-        widget.initialSelectedPostion ?? const LatLng(6.66891, -1.57455);
+  onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    if (widget.initialSelectedPosition != null) {
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: widget.initialSelectedPosition!, zoom: 18),
+      ));
+    }
+  }
 
-    lifter = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+  Future<void> _getCommercialCoordinates() async {
+    bool isBusButtonClicked = false;
+    DatabaseReference commercialRef = _databaseRef.child('Commercial');
 
-    lifter.addListener(() {
-      setState(() {});
+    // Set up a stream to listen for changes in the commercial coordinates
+    commercialRef.onValue.listen((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+
+      if (data != null) {
+        double? commercialLatitude = data['f_latitude'] as double?;
+        double? commercialLongitude = data['f_longitude'] as double?;
+
+        if (commercialLatitude != null && commercialLongitude != null) {
+          // Now, you have the updated commercial latitude and longitude.
+          // You can use this data to update the marker on the map or draw a route from the current location to the commercial location if you want.
+
+          if (mapController != null) {
+            // Update the marker for the commercial location
+            setState(() {
+              _commercialMarker = Marker(
+                markerId: MarkerId('commercial_location'),
+                position: LatLng(commercialLatitude, commercialLongitude),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueOrange,
+                ),
+                infoWindow: InfoWindow(
+                    title: 'Commercial Bus',
+                    onTap: () {
+                      isBusButtonClicked = !isBusButtonClicked;
+                      if (isBusButtonClicked) {
+                        setState(() {
+                          _drawPolyline(
+                            LatLng(6.6827, -1.5769),
+                            LatLng(6.6691, -1.5676),
+                          );
+                        });
+                      } else {
+                        _drawPolyline(
+                          LatLng(0, 0),
+                          LatLng(0, 0),
+                        );
+                      }
+                    }),
+              );
+            });
+          }
+        }
+      }
     });
   }
 
-  // if(widget.busName == 'Commercial'){
-  //
-  // }else if(widget.busName =='Brunei'){}
+  Future<void> _getBruneiCoordinates() async {
+    bool isBusButtonClicked = false;
+    DatabaseReference destinationRef = _databaseRef.child('GPS');
+
+    // Set up a stream to listen for changes in the destination coordinates
+    destinationRef.onValue.listen((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+
+      if (data != null) {
+        double? destinationLatitude = data['f_latitude'] as double?;
+        double? destinationLongitude = data['f_longitude'] as double?;
+
+        if (destinationLatitude != null && destinationLongitude != null) {
+          // Now, you have the updated destination latitude and longitude.
+          // You can use this data to update the marker on the map or draw a route from the current location to the destination location if you want.
+
+          if (mapController != null) {
+            // Update the marker for the bus destination
+            setState(() {
+              _destinationMarker = Marker(
+                markerId: MarkerId('brunei_location'),
+                position: LatLng(destinationLatitude, destinationLongitude),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(
+                    title: 'Brunei Bus',
+                    onTap: () {
+                      isBusButtonClicked = !isBusButtonClicked;
+                      if (isBusButtonClicked) {
+                        setState(() {
+                          _drawPolyline(
+                            LatLng(6.6691, -1.5676),
+                            LatLng(6.6704, -1.5742),
+                          );
+                        });
+                      } else {
+                        _drawPolyline(
+                          LatLng(0, 0),
+                          LatLng(0, 0),
+                        );
+                      }
+                    }),
+              );
+            });
+          }
+        }
+      }
+    });
+  }
+
+  Future<void> _drawPolyline(LatLng start, LatLng end) async {
+    List<LatLng> polylineCoordinates = [];
+
+    PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
+      kGoogleApiKey,
+      PointLatLng(start.latitude, start.longitude),
+      PointLatLng(end.latitude, end.longitude),
+      travelMode: TravelMode.driving,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    setState(() {
+      _polylineCoordinates = polylineCoordinates;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,169 +179,77 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       body: Stack(
         children: [
           GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
+            cameraTargetBounds: CameraTargetBounds(LatLngBounds(
+              northeast: LatLng(6.755010, -1.423322),
+              southwest: LatLng(6.599917, -1.748450),
+            )),
             initialCameraPosition: CameraPosition(
-              target: selectedPosition,
+              target: currentLocation ?? selectedPosition,
               zoom: 14.4746,
             ),
             onMapCreated: onMapCreated,
-            onCameraIdle: onCameraIdle,
-            onCameraMove: onCameraMove,
-            onCameraMoveStarted: onCameraMoveStarted,
-          ),
-          Center(
-            child: Transform.translate(
-              offset: Offset(.0, -20 + (lifter.value * -15)),
-              child: SizedBox(
-                height: 40,
-                width: 40,
-                child: Image.asset('assets/icons/location_pin.png'),
+            markers: {
+              if (currentLocation != null)
+                Marker(
+                  markerId: MarkerId('user_location'),
+                  position: currentLocation!,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure),
+                ),
+              if (_destinationMarker != null) _destinationMarker!,
+              if (_commercialMarker != null) _commercialMarker!,
+            },
+            polylines: {
+              // Polyline for the fixed line between the two coordinates
+              Polyline(
+                polylineId: PolylineId('fixed_polyline'),
+                color: Colors.red,
+                width: 3,
+                points: _polylineCoordinates,
               ),
-            ),
-          ),
-          Center(
-            child: FadeTransition(
-              opacity: lifter,
-              child: const CircleAvatar(
-                radius: 2,
-                backgroundColor: Colors.grey,
-              ),
-            ),
+            },
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: true,
           ),
           SafeArea(
             child: Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.topCenter,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: FloatingActionButton(
-                        elevation: 10,
-                        backgroundColor: Colors.grey[50],
-                        foregroundColor: Colors.blueGrey,
-                        onPressed: () {
-                          getCurrentLocation();
-                        },
-                        child: const Icon(Icons.my_location),
-                      ),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton(
+                      elevation: 10,
+                      backgroundColor: Colors.grey[50],
+                      foregroundColor: Colors.blueGrey,
+                      onPressed: () async {
+                        bool serviceEnabled =
+                            await Geolocator.isLocationServiceEnabled();
+                        if (serviceEnabled) {
+                          Position pos = await Geolocator.getCurrentPosition();
+                          LatLng currentPos =
+                              LatLng(pos.latitude, pos.longitude);
+                          setState(() {
+                            currentLocation = currentPos;
+                            mapController?.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(target: currentPos, zoom: 18),
+                              ),
+                            );
+                          });
+                        }
+                      },
+                      child: const Icon(Icons.my_location),
                     ),
-                    // const SizedBox(height: 20),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     Navigator.pop(context, selectedPosition);
-                    //   },
-                    //   child: const Text('Choose location'),
-                    // )
-                  ],
-                ),
+                  ),
+                ]),
               ),
             ),
           ),
-          // SafeArea(
-          //   child: Align(
-          //     alignment: Alignment.topLeft,
-          //     child: Container(
-          //       height: 54,
-          //       alignment: Alignment.centerLeft,
-          //       padding: const EdgeInsets.symmetric(horizontal: 20),
-          //       child: Material(
-          //         color: Colors.grey[50],
-          //         elevation: 10,
-          //         borderRadius: BorderRadius.circular(16),
-          //         // child: IconButton(
-          //         //   color: Colors.blueGrey,
-          //         //   onPressed: () {
-          //         //     Navigator.pop(context);
-          //         //   },
-          //         //   icon: const Icon(Icons.arrow_back),
-          //         // ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
-  }
-
-  onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-    if (widget.initialSelectedPostion != null) {
-      mapController.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: widget.initialSelectedPostion!, zoom: 18)));
-    } else {
-      try {
-        getCurrentLocation();
-      } catch (e) {
-        log(e.toString());
-      }
-    }
-  }
-
-  getCurrentLocation() async {
-    bool? serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      // return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    Position pos = await Geolocator.getCurrentPosition();
-    LatLng currentPos = LatLng(pos.latitude, pos.longitude);
-    selectedPosition = currentPos;
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: selectedPosition, zoom: 18)));
-  }
-
-  onCameraIdle() {
-    lifter.reverse();
-  }
-
-  onCameraMove(CameraPosition pos) {
-    selectedPosition = pos.target;
-  }
-
-  onCameraMoveStarted() {
-    lifter.forward();
-  }
-
-  @override
-  void dispose() {
-    mapController.dispose();
-    lifter.dispose();
-
-    super.dispose();
   }
 }
