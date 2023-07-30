@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,16 +7,16 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 const String kGoogleApiKey = 'AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM';
 
-class PolyTestMap extends StatefulWidget {
+class EstimatedPolyTestMap extends StatefulWidget {
   final LatLng? initialSelectedPosition;
 
-  const PolyTestMap({Key? key, this.initialSelectedPosition}) : super(key: key);
+  const EstimatedPolyTestMap({Key? key, this.initialSelectedPosition}) : super(key: key);
 
   @override
-  _PolyTestMapState createState() => _PolyTestMapState();
+  _EstimatedPolyTestMapState createState() => _EstimatedPolyTestMapState();
 }
 
-class _PolyTestMapState extends State<PolyTestMap> {
+class _EstimatedPolyTestMapState extends State<EstimatedPolyTestMap> {
   GoogleMapController? mapController;
   LatLng selectedPosition = LatLng(6.6745, -1.5716); // Default position
   LatLng? currentLocation;
@@ -29,14 +27,16 @@ class _PolyTestMapState extends State<PolyTestMap> {
 
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
+  String _estimatedTime = '';
+
+  // A constant average speed in meters per second (you can adjust this)
+  static const double AVERAGE_SPEED_MPS = 10.0;
 
   @override
   void initState() {
     super.initState();
-    // _getLocation();
     _getCommercialCoordinates();
     _getBruneiCoordinates();
-
   }
 
   onMapCreated(GoogleMapController controller) {
@@ -49,7 +49,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
   }
 
   Future<void> _getCommercialCoordinates() async {
-     bool isBusButtonClicked = false;
+    bool isBusButtonClicked = false;
     DatabaseReference commercialRef = _databaseRef.child('Commercial');
 
     // Set up a stream to listen for changes in the commercial coordinates
@@ -61,9 +61,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
         double? commercialLongitude = data['f_longitude'] as double?;
 
         if (commercialLatitude != null && commercialLongitude != null) {
-          // Now, you have the updated commercial latitude and longitude.
-          // You can use this data to update the marker on the map or draw a route from the current location to the commercial location if you want.
-
           if (mapController != null) {
             // Update the marker for the commercial location
             setState(() {
@@ -73,24 +70,25 @@ class _PolyTestMapState extends State<PolyTestMap> {
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange,
                 ),
-                infoWindow: InfoWindow(title: 'Commercial Bus',
-                    onTap: () {
-                 isBusButtonClicked =!isBusButtonClicked;
-                 if(isBusButtonClicked){
-                   setState(() {
-                     _drawPolyline(
-                       LatLng(6.6827, -1.5769),
-                       LatLng(6.6691, -1.5676),
-                     );
-                   });
-                 }else {
-                   _drawPolyline(
-                     LatLng(0,0),
-                     LatLng(0,0),
-                   );
-                 }
-
-                }),
+                infoWindow: InfoWindow(
+                  title: 'Commercial Bus',
+                  onTap: () {
+                    isBusButtonClicked = !isBusButtonClicked;
+                    if (isBusButtonClicked) {
+                      setState(() {
+                        _drawPolyline(
+                          LatLng(6.6827, -1.5769),
+                          LatLng(6.6691, -1.5676),
+                        );
+                      });
+                    } else {
+                      _drawPolyline(
+                        LatLng(0, 0),
+                        LatLng(0, 0),
+                      );
+                    }
+                  },
+                ),
               );
             });
           }
@@ -100,8 +98,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
   }
 
   Future<void> _getBruneiCoordinates() async {
-
-
     bool isBusButtonClicked = false;
     DatabaseReference destinationRef = _databaseRef.child('GPS');
 
@@ -114,9 +110,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
         double? destinationLongitude = data['f_longitude'] as double?;
 
         if (destinationLatitude != null && destinationLongitude != null) {
-          // Now, you have the updated destination latitude and longitude.
-          // You can use this data to update the marker on the map or draw a route from the current location to the destination location if you want.
-
           if (mapController != null) {
             // Update the marker for the bus destination
             setState(() {
@@ -127,22 +120,22 @@ class _PolyTestMapState extends State<PolyTestMap> {
                     BitmapDescriptor.hueBlue),
                 infoWindow: InfoWindow(
                   title: 'Brunei Bus',
-              onTap: () {
-                isBusButtonClicked = !isBusButtonClicked;
-                if (isBusButtonClicked) {
-                  setState(() {
-                    _drawPolyline(
-                      LatLng(6.6691, -1.5676),
-                      LatLng(6.6704, -1.5742),
-                    );
-                  });
-                } else {
-                  _drawPolyline(
-                    LatLng(0, 0),
-                    LatLng(0, 0),
-                  );
-                }
-              }
+                  onTap: () {
+                    isBusButtonClicked = !isBusButtonClicked;
+                    if (isBusButtonClicked) {
+                      setState(() {
+                        _drawPolyline(
+                          LatLng(6.6691, -1.5676),
+                          LatLng(6.6704, -1.5742),
+                        );
+                      });
+                    } else {
+                      _drawPolyline(
+                        LatLng(0, 0),
+                        LatLng(0, 0),
+                      );
+                    }
+                  },
                 ),
               );
             });
@@ -170,7 +163,22 @@ class _PolyTestMapState extends State<PolyTestMap> {
 
     setState(() {
       _polylineCoordinates = polylineCoordinates;
+      _estimatedTime = calculateEstimatedTime(start, end);
     });
+  }
+
+  String calculateEstimatedTime(LatLng start, LatLng end) {
+    double distanceInMeters = Geolocator.distanceBetween(
+      start.latitude,
+      start.longitude,
+      end.latitude,
+      end.longitude,
+    );
+    double estimatedTimeInSeconds = distanceInMeters / AVERAGE_SPEED_MPS;
+    Duration duration = Duration(seconds: estimatedTimeInSeconds.toInt());
+    String formattedTime =
+        '${duration.inMinutes} min ${duration.inSeconds.remainder(60)} sec';
+    return formattedTime;
   }
 
   @override
@@ -200,7 +208,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
               if (_commercialMarker != null) _commercialMarker!,
             },
             polylines: {
-              // Polyline for the fixed line between the two coordinates
               Polyline(
                 polylineId: PolylineId('fixed_polyline'),
                 color: Colors.red,
@@ -244,6 +251,20 @@ class _PolyTestMapState extends State<PolyTestMap> {
                       child: const Icon(Icons.my_location),
                     ),
                   ),
+                  SizedBox(height: 10),
+                  if (_estimatedTime.isNotEmpty)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: [
+                          BoxShadow(color: Colors.grey, blurRadius: 3)
+                        ],
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Text('Estimated Time: $_estimatedTime'),
+                    ),
                 ]),
               ),
             ),
