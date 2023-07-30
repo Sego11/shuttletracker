@@ -71,7 +71,6 @@ List settingsIcon = [
 
 List<Widget> settingsscreens = [
   const ProfileScreen(),
-  // NewProfileScreen(),
   const RulesAndTermsScreen(),
   const FaqsScreen(),
   const RateUsScreen(),
@@ -99,17 +98,13 @@ List profileIcons = [
     'assets/images/info.png',
     scale: 1.2,
   ),
-  // Image.asset(
-  //   "assets/images/loc.png",
-  //   scale: 1.2,
-  // ),
+ 
 ];
 
 List<Widget> profilescreens = [
   const EditProfileScreen(),
   const ChangePasswordScreen(),
   const AppInfoScreen(),
-  // const ChangeLocationScreen(),
 ];
 
 List faveBusName = [

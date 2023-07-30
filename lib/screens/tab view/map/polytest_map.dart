@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
-class TestMap extends StatefulWidget {
+const String kGoogleApiKey = 'AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM';
+
+class PolyTestMap extends StatefulWidget {
   final LatLng? initialSelectedPosition;
 
-  const TestMap({Key? key, this.initialSelectedPosition}) : super(key: key);
+  const PolyTestMap({Key? key, this.initialSelectedPosition}) : super(key: key);
 
   @override
-  _TestMapState createState() => _TestMapState();
+  _PolyTestMapState createState() => _PolyTestMapState();
 }
 
-class _TestMapState extends State<TestMap> {
+class _PolyTestMapState extends State<PolyTestMap> {
   GoogleMapController? mapController;
   LatLng selectedPosition = LatLng(6.6745, -1.5716); // Default position
   LatLng? currentLocation;
@@ -22,16 +25,16 @@ class _TestMapState extends State<TestMap> {
   Marker? _destinationMarker;
   Marker? _commercialMarker;
 
-  // Coordinates for the fixed poly line
-  LatLng coordinate1 = LatLng(6.6691, -1.5676);
-  LatLng coordinate2 = LatLng(6.6704, -1.5742);
+  PolylinePoints _polylinePoints = PolylinePoints();
+  List<LatLng> _polylineCoordinates = [];
 
   @override
   void initState() {
     super.initState();
     // _getLocation();
     _getCommercialCoordinates();
-    _getDestinationCoordinates();
+    _getBruneiCoordinates();
+
   }
 
   onMapCreated(GoogleMapController controller) {
@@ -44,7 +47,8 @@ class _TestMapState extends State<TestMap> {
   }
 
   Future<void> _getCommercialCoordinates() async {
-    DatabaseReference commercialRef = _databaseRef.child('GPS');
+     bool isBusButtonClicked = false;
+    DatabaseReference commercialRef = _databaseRef.child('Commercial');
 
     // Set up a stream to listen for changes in the commercial coordinates
     commercialRef.onValue.listen((event) {
@@ -67,7 +71,24 @@ class _TestMapState extends State<TestMap> {
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange,
                 ),
-                infoWindow: InfoWindow(title: 'Commercial Bus', onTap: () {}),
+                infoWindow: InfoWindow(title: 'Commercial Bus',
+                    onTap: () {
+                 isBusButtonClicked =!isBusButtonClicked;
+                 if(isBusButtonClicked){
+                   setState(() {
+                     _drawPolyline(
+                       LatLng(6.6827, -1.5769),
+                       LatLng(6.6691, -1.5676),
+                     );
+                   });
+                 }else {
+                   _drawPolyline(
+                     LatLng(0,0),
+                     LatLng(0,0),
+                   );
+                 }
+
+                }),
               );
             });
           }
@@ -76,8 +97,11 @@ class _TestMapState extends State<TestMap> {
     });
   }
 
-  Future<void> _getDestinationCoordinates() async {
-    DatabaseReference destinationRef = _databaseRef.child('Commercial');
+  Future<void> _getBruneiCoordinates() async {
+
+
+    bool isBusButtonClicked = false;
+    DatabaseReference destinationRef = _databaseRef.child('GPS');
 
     // Set up a stream to listen for changes in the destination coordinates
     destinationRef.onValue.listen((event) {
@@ -101,12 +125,49 @@ class _TestMapState extends State<TestMap> {
                     BitmapDescriptor.hueBlue),
                 infoWindow: InfoWindow(
                   title: 'Brunei Bus',
+              onTap: () {
+                isBusButtonClicked = !isBusButtonClicked;
+                if (isBusButtonClicked) {
+                  setState(() {
+                    _drawPolyline(
+                      LatLng(6.6691, -1.5676),
+                      LatLng(6.6704, -1.5742),
+                    );
+                  });
+                } else {
+                  _drawPolyline(
+                    LatLng(0, 0),
+                    LatLng(0, 0),
+                  );
+                }
+              }
                 ),
               );
             });
           }
         }
       }
+    });
+  }
+
+  Future<void> _drawPolyline(LatLng start, LatLng end) async {
+    List<LatLng> polylineCoordinates = [];
+
+    PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
+      kGoogleApiKey,
+      PointLatLng(start.latitude, start.longitude),
+      PointLatLng(end.latitude, end.longitude),
+      travelMode: TravelMode.driving,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    setState(() {
+      _polylineCoordinates = polylineCoordinates;
     });
   }
 
@@ -141,8 +202,8 @@ class _TestMapState extends State<TestMap> {
               Polyline(
                 polylineId: PolylineId('fixed_polyline'),
                 color: Colors.red,
-                width: 5,
-                points: [coordinate1, coordinate2],
+                width: 3,
+                points: _polylineCoordinates,
               ),
             },
             myLocationEnabled: true,

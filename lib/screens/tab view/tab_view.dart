@@ -2,11 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/livemap.dart';
 import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/bus_screen.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/map/polytest_map.dart';
-import 'package:shuttle_tracker_app/screens/tab%20view/map/test_map.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/settings/settings_screen.dart';
 
 // ignore: must_be_immutable
@@ -67,11 +65,6 @@ class _TabViewState extends State<TabView> {
                 label: 'Buses',
                 activeIcon: Icon(Icons.directions_bus_outlined),
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.star_outline),
-              //   label: 'Favourites',
-              //   activeIcon: Icon(Icons.star),
-              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings_outlined),
                 label: 'Settings',

@@ -1,7 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/bus/sub/adding%20bus/adding_bus_screen.dart';
@@ -57,43 +58,6 @@ class _BodyState extends State<Body> {
                     SizedBox(
                       height: selectedBusNames.isNotEmpty ? 45 : 300,
                     ),
-                    selectedBusNames.isNotEmpty
-                        ? TextField(
-                            decoration: InputDecoration(
-                              fillColor: white,
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  22,
-                                ),
-                                borderSide: const BorderSide(
-                                  color: black,
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  22,
-                                ),
-                                borderSide: BorderSide(
-                                  color: primary,
-                                  width: 1,
-                                ),
-                              ),
-                              hintText: 'Search',
-                              hintStyle: const TextStyle(
-                                color: grey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              suffixIcon: const Icon(
-                                Icons.search,
-                                color: black,
-                                size: 25,
-                              ),
-                            ),
-                          )
-                        : const SizedBox(),
                     const SizedBox(
                       height: 45,
                     ),
@@ -132,7 +96,9 @@ class _BodyState extends State<Body> {
               ),
             );
           }
-          return Center(child: CupertinoActivityIndicator());
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
         });
   }
 }

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
@@ -67,7 +67,7 @@ class _BusScreenState extends State<BusScreen> {
                           readData.getSelectedBuses();
                         });
                       } else if (result == null) {
-                        print('error');
+                        // print('error');
                       }
                     },
               icon: const Icon(

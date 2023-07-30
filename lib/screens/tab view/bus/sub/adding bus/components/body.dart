@@ -24,41 +24,6 @@ class _BodyState extends State<Body> {
             const SizedBox(
               height: 45,
             ),
-            TextField(
-              decoration: InputDecoration(
-                fillColor: white,
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    22,
-                  ),
-                  borderSide: const BorderSide(
-                    color: black,
-                    width: 1,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    22,
-                  ),
-                  borderSide: BorderSide(
-                    color: primary,
-                    width: 1,
-                  ),
-                ),
-                hintText: 'Search',
-                hintStyle: const TextStyle(
-                  color: grey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-                suffixIcon: const Icon(
-                  Icons.search,
-                  color: black,
-                  size: 25,
-                ),
-              ),
-            ),
             const SizedBox(
               height: 48,
             ),

@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:shuttle_tracker_app/components/admin_buses_list_screen.dart';
+import 'package:shuttle_tracker_app/components/backbutton.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 
 class AdminBusesScreen extends StatelessWidget {
@@ -10,6 +12,10 @@ class AdminBusesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: DefaultBackButton(),
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: primary,
         title: Text(
           'Buses',
         ),
@@ -23,34 +29,21 @@ class AdminBusesScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 75,
-            width: 75,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                22,
-              ),
-              border: Border.all(color: black, width: 1),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Image.asset('assets/images/buses.png'),
-                ),
-                Text(
-                  'BUSES',
-                  style: TextStyle(
-                    color: black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          )
+          SizedBox(
+            height: 20,
+          ),
+          ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return AdminBusesListScreen(buttontext: busNames[index]);
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(
+                  height: 20,
+                );
+              },
+              itemCount: busNames.length)
         ],
       ),
     );
