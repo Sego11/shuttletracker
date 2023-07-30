@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/Components/body.dart';
+import 'package:shuttle_tracker_app/screens/admin/admin.dart';
 import 'package:shuttle_tracker_app/screens/password/forgot%20password/forgot_password_screen.dart';
 
 class Body extends StatefulWidget {
@@ -24,13 +25,30 @@ class _BodyState extends State<Body> {
   final _passwordController = TextEditingController();
 
   Future logIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    try {
+      if (_emailController != 'admin@admin.com') {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
 
-    isSignUpClicked = false;
-    loggedUserID = FirebaseAuth.instance.currentUser!.uid;
+        isSignUpClicked = false;
+        loggedUserID = FirebaseAuth.instance.currentUser!.uid;
+      } else {
+        if (_passwordController.text.trim() == 'admin12345') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminScreen(),
+            ),
+          );
+        } else {
+          throw Exception('User not found');
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

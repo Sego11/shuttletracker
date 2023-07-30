@@ -12,6 +12,7 @@ class AdminScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: primary,
         title: Text(
@@ -80,7 +81,7 @@ class AdminScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UsersScreen( ),
+                      builder: (context) => UsersScreen(),
                     ));
               },
               child: Container(

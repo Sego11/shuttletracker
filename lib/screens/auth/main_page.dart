@@ -6,6 +6,7 @@ import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/Sign%20Up/Components/body.dart';
 import 'package:shuttle_tracker_app/screens/auth/auth_page.dart';
 import 'package:shuttle_tracker_app/screens/newprofile/new_profile_screen.dart';
+import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 import 'package:shuttle_tracker_app/screens/tab%20view/tab_view.dart';
 
 class MainPage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _MainPageState extends State<MainPage> {
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             loggedUserID = FirebaseAuth.instance.currentUser!.uid;
+            ReadData().getAllbuses();
             return isSignUpClicked ? NewProfileScreen() : TabView();
           } else {
             return AuthPage();

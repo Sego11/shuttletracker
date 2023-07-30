@@ -80,7 +80,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
                    setState(() {
                      _drawPolyline(
                        LatLng(6.6827, -1.5769),
-                       LatLng(6.6691, -1.5676),
+                    LatLng(6.6691, -1.5676),
                      );
                    });
                  }else {
@@ -121,7 +121,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
             // Update the marker for the bus destination
             setState(() {
               _destinationMarker = Marker(
-                markerId: MarkerId('bus_destination'),
+                markerId: MarkerId('brunei_location'),
                 position: LatLng(destinationLatitude, destinationLongitude),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueBlue),
@@ -154,6 +154,8 @@ class _PolyTestMapState extends State<PolyTestMap> {
 
   Future<void> _drawPolyline(LatLng start, LatLng end) async {
     List<LatLng> polylineCoordinates = [];
+
+    
 
     PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
       kGoogleApiKey,

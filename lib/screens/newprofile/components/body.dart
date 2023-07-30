@@ -43,7 +43,6 @@ class _BodyState extends State<Body> {
     final docID = document.docs.single.id;
 
     await uploadImage(profileFilePath);
-    print(profileFileURL);
 
     await addUserDetails(
       docID,

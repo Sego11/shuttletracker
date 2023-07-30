@@ -25,10 +25,10 @@ double screenHeight = height / 932;
 double screenWidth = width / 430;
 
 List<String> busNames = [
-  'Brunei Bus',
-  'Commercial Bus',
-  'Gaza Bus',
-  'Bomso Bus',
+  // 'Brunei Bus',
+  // 'Commercial Bus',
+  // 'Gaza Bus',
+  // 'Bomso Bus',
 ];
 
 List<String> selectedBusNames = [];
@@ -149,3 +149,5 @@ List specificBusNumber = [];
 List specificBusDestination = [];
 List specificBusSeatNumber = [];
 List specificBusStart = [];
+
+
