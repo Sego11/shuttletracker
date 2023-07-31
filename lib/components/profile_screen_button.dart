@@ -23,8 +23,8 @@ class ProfileScreenButton extends StatelessWidget {
             )));
       }),
       child: Container(
-        height: 78,
-        width: 306,
+        height: 75,
+        width: 300,
         decoration: BoxDecoration(
           color: header,
           borderRadius: BorderRadius.circular(

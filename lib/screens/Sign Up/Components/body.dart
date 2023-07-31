@@ -302,37 +302,7 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: signUp,
-              //() {
-              //   if (isTextFieldChecked()) {
 
-              //   } else {
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       SnackBar(
-              //         duration: const Duration(seconds: 2),
-              //         behavior: SnackBarBehavior.floating,
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(20),
-              //         ),
-              //         content: const Padding(
-              //           padding: EdgeInsets.symmetric(horizontal: 14.0),
-              //           child: Text(
-              //             'A Textfield cannot be empty',
-              //             style: TextStyle(height: 1.3),
-              //             textAlign: TextAlign.center,
-              //           ),
-              //         ),
-              //       ),
-              //     );
-              //   }
-              // },
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: ((context) => const NewProfileScreen()),
-              //     ),
-              //   );
-              // },
               child: Container(
                 height: 63,
                 width: 375,
@@ -356,8 +326,7 @@ class _BodyState extends State<Body> {
                         fontSize: 16,
                       ),
                     ),
-                    // Spacer(),
-                    // Icon(Icons.arrow_forward_ios_rounded, color: black),
+
                   ],
                 ),
               ),
@@ -372,7 +341,7 @@ class _BodyState extends State<Body> {
                 children: [
                   Container(
                     height: 1,
-                    width: 139,
+                    width: 120,
                     decoration: const BoxDecoration(
                       color: grey,
                     ),
@@ -393,7 +362,7 @@ class _BodyState extends State<Body> {
                   ),
                   Container(
                     height: 1,
-                    width: 139,
+                    width: 120,
                     decoration: const BoxDecoration(
                       color: grey,
                     ),

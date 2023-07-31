@@ -94,12 +94,6 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
-                      // setState(() {
-                      //   int index = busNames.indexOf(widget.selectedBusName);
-                      //   if (index != -1) {
-                      //     busNameSelected = busNames[index];
-                      //   }
-                      // });
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -245,8 +239,8 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                 displayBusInfo();
               },
               child: Container(
-                height: 78,
-                width: 300,
+                height: 75,
+                width: 270,
                 decoration: BoxDecoration(
                   color: header,
                   borderRadius: BorderRadius.circular(22),
@@ -265,7 +259,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
                         'assets/images/buses.png',
                       ),
                       const SizedBox(
-                        width: 50,
+                        width: 30,
                       ),
                       Text(
                         widget.selectedBusName,
@@ -281,7 +275,7 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
               ),
             ),
             const SizedBox(
-              width: 13,
+              width: 10,
             ),
             Container(
               height: 78,

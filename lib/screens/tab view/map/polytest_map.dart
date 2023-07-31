@@ -36,7 +36,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
     // _getLocation();
     _getCommercialCoordinates();
     _getBruneiCoordinates();
-
   }
 
   onMapCreated(GoogleMapController controller) {
@@ -49,7 +48,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
   }
 
   Future<void> _getCommercialCoordinates() async {
-     bool isBusButtonClicked = false;
+    bool isBusButtonClicked = false;
     DatabaseReference commercialRef = _databaseRef.child('Commercial');
 
     // Set up a stream to listen for changes in the commercial coordinates
@@ -73,24 +72,25 @@ class _PolyTestMapState extends State<PolyTestMap> {
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange,
                 ),
-                infoWindow: InfoWindow(title: 'Commercial Bus',
-                    onTap: () {
-                 isBusButtonClicked =!isBusButtonClicked;
-                 if(isBusButtonClicked){
-                   setState(() {
-                     _drawPolyline(
-                       LatLng(6.6827, -1.5769),
-                    LatLng(6.6691, -1.5676),
-                     );
-                   });
-                 }else {
-                   _drawPolyline(
-                     LatLng(0,0),
-                     LatLng(0,0),
-                   );
-                 }
-
-                }),
+                onTap: () {
+                  isBusButtonClicked = !isBusButtonClicked;
+                  if (isBusButtonClicked) {
+                    setState(() {
+                      _drawPolyline(
+                        LatLng(6.6827, -1.5769),
+                        LatLng(6.6691, -1.5676),
+                      );
+                    });
+                  } else {
+                    _drawPolyline(
+                      LatLng(0, 0),
+                      LatLng(0, 0),
+                    );
+                  }
+                },
+                infoWindow: InfoWindow(
+                  title: 'Commercial Bus',
+                ),
               );
             });
           }
@@ -100,8 +100,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
   }
 
   Future<void> _getBruneiCoordinates() async {
-
-
     bool isBusButtonClicked = false;
     DatabaseReference destinationRef = _databaseRef.child('GPS');
 
@@ -125,24 +123,24 @@ class _PolyTestMapState extends State<PolyTestMap> {
                 position: LatLng(destinationLatitude, destinationLongitude),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueBlue),
+                onTap: () {
+                  isBusButtonClicked = !isBusButtonClicked;
+                  if (isBusButtonClicked) {
+                    setState(() {
+                      _drawPolyline(
+                        LatLng(6.6691, -1.5676),
+                        LatLng(6.6704, -1.5742),
+                      );
+                    });
+                  } else {
+                    _drawPolyline(
+                      LatLng(0, 0),
+                      LatLng(0, 0),
+                    );
+                  }
+                },
                 infoWindow: InfoWindow(
                   title: 'Brunei Bus',
-              onTap: () {
-                isBusButtonClicked = !isBusButtonClicked;
-                if (isBusButtonClicked) {
-                  setState(() {
-                    _drawPolyline(
-                      LatLng(6.6691, -1.5676),
-                      LatLng(6.6704, -1.5742),
-                    );
-                  });
-                } else {
-                  _drawPolyline(
-                    LatLng(0, 0),
-                    LatLng(0, 0),
-                  );
-                }
-              }
                 ),
               );
             });
@@ -154,8 +152,6 @@ class _PolyTestMapState extends State<PolyTestMap> {
 
   Future<void> _drawPolyline(LatLng start, LatLng end) async {
     List<LatLng> polylineCoordinates = [];
-
-    
 
     PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
       kGoogleApiKey,

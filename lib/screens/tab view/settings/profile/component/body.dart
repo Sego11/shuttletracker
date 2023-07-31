@@ -212,17 +212,17 @@ class Body extends StatelessWidget {
                 itemCount: profileButtonText.length),
           ),
         ),
-        // const SizedBox(
-        //   height: 20,
-        // ),
+        const SizedBox(
+          height: 40,
+        ),
         Center(
           child: GestureDetector(
             onTap: () {
               deleteAccount();
             },
             child: Container(
-              height: 78,
-              width: 306,
+              height: 75,
+              width: 300,
               decoration: BoxDecoration(
                 color: header,
                 borderRadius: BorderRadius.circular(

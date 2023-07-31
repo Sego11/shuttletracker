@@ -195,7 +195,7 @@ class _BodyState extends State<Body> {
             ),
             const SizedBox(height: 5),
             Padding(
-              padding: const EdgeInsets.only(left: 226),
+              padding: const EdgeInsets.only(left: 180),
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -216,7 +216,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 20,
             ),
             GestureDetector(
               onTap: logIn,
@@ -242,7 +242,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 19,
+              height: 15,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -251,7 +251,7 @@ class _BodyState extends State<Body> {
                 children: [
                   Container(
                     height: 1,
-                    width: 139,
+                    width: 120,
                     decoration: const BoxDecoration(
                       color: grey,
                     ),
@@ -272,7 +272,7 @@ class _BodyState extends State<Body> {
                   ),
                   Container(
                     height: 1,
-                    width: 139,
+                    width: 120,
                     decoration: const BoxDecoration(
                       color: grey,
                     ),
@@ -281,7 +281,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             const SizedBox(
-              height: 33,
+              height: 30,
             ),
             GestureDetector(
               onTap: () {},
@@ -371,33 +371,23 @@ class _BodyState extends State<Body> {
                   )),
             ),
             const SizedBox(
-              height: 24,
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'Not a member?',
+                  'Not a member? ',
                   style: TextStyle(
                     color: black,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(
-                  width: 2,
-                ),
+
                 GestureDetector(
                   onTap: widget.showSignUpScreen,
-                  // onTap: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: ((context) => const SignUpScreen()),
-                  //     ),
-                  //   );
-                  // },
                   child: Text(
                     'Sign up here',
                     style: TextStyle(
