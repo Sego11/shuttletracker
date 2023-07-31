@@ -9,7 +9,8 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: header,
+        automaticallyImplyLeading: false,
+        backgroundColor: primary,
         elevation: 0,
         actions: [
           Padding(
@@ -21,7 +22,6 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ],
-        automaticallyImplyLeading: false,
         title: const Text(
           'Settings',
           style: TextStyle(

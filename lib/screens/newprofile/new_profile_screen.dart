@@ -12,7 +12,7 @@ class NewProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: header,
+        backgroundColor: primary,
         elevation: 0,
         actions: [
           Padding(

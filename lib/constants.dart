@@ -98,7 +98,6 @@ List profileIcons = [
     'assets/images/info.png',
     scale: 1.2,
   ),
- 
 ];
 
 List<Widget> profilescreens = [
@@ -149,5 +148,3 @@ List specificBusNumber = [];
 List specificBusDestination = [];
 List specificBusSeatNumber = [];
 List specificBusStart = [];
-
-

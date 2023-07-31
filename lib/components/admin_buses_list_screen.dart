@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shuttle_tracker_app/constants.dart';
 import 'package:shuttle_tracker_app/screens/admin/admin_edit_buses.dart';
-import 'package:shuttle_tracker_app/screens/read%20data/selected_buses.dart';
 
 class AdminBusesListScreen extends StatefulWidget {
   final VoidCallback deleteBus;

@@ -11,7 +11,7 @@ class FaqsScreen extends StatelessWidget {
       appBar: AppBar(
         leading: const DefaultBackButton(),
         automaticallyImplyLeading: false,
-        backgroundColor: header,
+        backgroundColor: primary,
         elevation: 0.0,
         actions: [
           Padding(

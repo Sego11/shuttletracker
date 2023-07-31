@@ -30,16 +30,14 @@ class _TabViewState extends State<TabView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: PageView(
-          controller: pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            PolyTestMap(),
-            BusScreen(),
-            SettingsScreen(),
-          ],
-        ),
+      body: PageView(
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          PolyTestMap(),
+          BusScreen(),
+          SettingsScreen(),
+        ],
       ),
       bottomNavigationBar: ValueListenableBuilder<int>(
         valueListenable: currentIndexNotifier,

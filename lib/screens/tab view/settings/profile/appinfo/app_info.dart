@@ -12,7 +12,7 @@ class AppInfoScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: const DefaultBackButton(),
-        backgroundColor: header,
+        backgroundColor: primary,
         elevation: 0,
         actions: [
           Padding(

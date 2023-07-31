@@ -80,7 +80,7 @@ class _BusScreenState extends State<BusScreen> {
       ),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: header,
+        backgroundColor: primary,
         automaticallyImplyLeading: false,
         actions: [
           Padding(

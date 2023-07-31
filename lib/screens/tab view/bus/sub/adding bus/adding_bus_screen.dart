@@ -88,7 +88,7 @@ class _AddingBusScreenState extends State<AddingBusScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: header,
+        backgroundColor: primary,
         leading: const DefaultBackButton(),
         automaticallyImplyLeading: false,
         actions: [

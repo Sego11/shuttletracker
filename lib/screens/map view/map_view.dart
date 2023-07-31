@@ -14,7 +14,7 @@ class MapView extends StatelessWidget {
         leading: const DefaultBackButton(),
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: header,
+        backgroundColor: primary,
         actions: [
           Padding(
             padding: const EdgeInsets.only(
@@ -33,7 +33,9 @@ class MapView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Body(busName: busName,),
+      body: Body(
+        busName: busName,
+      ),
     );
   }
 }
