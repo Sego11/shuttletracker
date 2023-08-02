@@ -32,7 +32,7 @@ class EditProfileScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Body(),
+      body: const SingleChildScrollView(child: Body(),),
     );
   }
 }

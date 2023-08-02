@@ -29,17 +29,35 @@ class _BodyState extends State<Body> {
   LatLng? currentLocation;
 
   DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
-  Marker? _destinationMarker;
+  Marker? _bruneiMarker;
   Marker? _commercialMarker;
 
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
+  BitmapDescriptor bruneiBusIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor commercialBusIcon = BitmapDescriptor.defaultMarker;
 
   @override
   void initState() {
     super.initState();
     widget.busName == 'Commercial Bus' ? _getCommercialCoordinates() : null;
     widget.busName == 'Brunei Bus' ? _getBruneiCoordinates() : null;
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      'assets/images/busIcon2.png',
+    ).then((icon) {
+      setState(() {
+        bruneiBusIcon = icon;
+      });
+    });
+
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration.empty, "assets/images/busIcon2.png")
+        .then((icon) {
+      setState(() {
+        commercialBusIcon = icon;
+      });
+    });
   }
 
   onMapCreated(GoogleMapController controller) {
@@ -73,9 +91,7 @@ class _BodyState extends State<Body> {
               _commercialMarker = Marker(
                 markerId: MarkerId('commercial_location'),
                 position: LatLng(commercialLatitude, commercialLongitude),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueOrange,
-                ),
+                icon: commercialBusIcon,
                 infoWindow: InfoWindow(
                     title: 'Commercial Bus',
                     onTap: () {
@@ -121,11 +137,10 @@ class _BodyState extends State<Body> {
           if (mapController != null) {
             // Update the marker for the bus destination
             setState(() {
-              _destinationMarker = Marker(
+              _bruneiMarker = Marker(
                 markerId: MarkerId('brunei_location'),
                 position: LatLng(destinationLatitude, destinationLongitude),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: bruneiBusIcon,
                 infoWindow: InfoWindow(
                     title: 'Brunei Bus',
                     onTap: () {
@@ -194,10 +209,59 @@ class _BodyState extends State<Body> {
                   markerId: MarkerId('user_location'),
                   position: currentLocation!,
                   icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueAzure),
+                      BitmapDescriptor.hueMagenta),
                 ),
-              if (_destinationMarker != null) _destinationMarker!,
+              if (_bruneiMarker != null) _bruneiMarker!,
               if (_commercialMarker != null) _commercialMarker!,
+              Marker(
+                markerId: MarkerId('marker1'),
+                position: LatLng(6.6827, -1.5769),
+                icon:  BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Commercial Bus Stop'),
+              ),
+              Marker(
+                markerId: MarkerId('marker2'),
+                position: LatLng(6.6691, -1.5676),
+                icon:BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'KSB Bus Stop'),
+              ),
+              Marker(
+                markerId: MarkerId('marker3'),
+                position: LatLng(6.6704, -1.5742),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Brunei Bus Stop'),
+              ),
+              Marker(
+                markerId: MarkerId('marker4'),
+                position: LatLng(6.6752, -1.5679),
+                icon:BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Casley Hayford Bus Stop'),
+              ),
+              Marker(
+                markerId: MarkerId('marker5'),
+                position: LatLng(6.6745, -1.5676),
+                icon:BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Pharmacy Bus Stop'),
+              ),
+              Marker(
+                markerId: MarkerId('marker6'),
+                position: LatLng(6.6793, -1.5728),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Conti Bus Stop B'),
+              ),
+              Marker(
+                markerId: MarkerId('marker7'),
+                position: LatLng(6.6796, -1.5730),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Conti Bus Stop B'),
+              ),
             },
             polylines: {
               // Polyline for the fixed line between the two coordinates

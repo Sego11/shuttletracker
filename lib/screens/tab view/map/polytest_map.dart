@@ -30,12 +30,33 @@ class _PolyTestMapState extends State<PolyTestMap> {
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
 
+  BitmapDescriptor bruneiBusIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor commercialBusIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor userIcon = BitmapDescriptor.defaultMarker;
+
   @override
   void initState() {
     super.initState();
-    // _getLocation();
-    _getCommercialCoordinates();
     _getBruneiCoordinates();
+
+    _getCommercialCoordinates();
+
+    BitmapDescriptor.fromAssetImage(
+   ImageConfiguration.empty,
+      'assets/images/busIcon2.png',
+    ).then((icon) {
+      setState(() {
+        bruneiBusIcon = icon;
+      });
+    });
+
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration.empty, "assets/images/busIcon2.png")
+        .then((icon) {
+      setState(() {
+        commercialBusIcon = icon;
+      });
+    });
   }
 
   onMapCreated(GoogleMapController controller) {
@@ -69,9 +90,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
               _commercialMarker = Marker(
                 markerId: MarkerId('commercial_location'),
                 position: LatLng(commercialLatitude, commercialLongitude),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueOrange,
-                ),
+                icon: commercialBusIcon,
                 onTap: () {
                   isBusButtonClicked = !isBusButtonClicked;
                   if (isBusButtonClicked) {
@@ -121,8 +140,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
               _destinationMarker = Marker(
                 markerId: MarkerId('brunei_location'),
                 position: LatLng(destinationLatitude, destinationLongitude),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: bruneiBusIcon,
                 onTap: () {
                   isBusButtonClicked = !isBusButtonClicked;
                   if (isBusButtonClicked) {

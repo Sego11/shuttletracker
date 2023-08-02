@@ -26,7 +26,7 @@ class _BodyState extends State<Body> {
 
   Future logIn() async {
     try {
-      if (_emailController != 'admin@admin.com') {
+      if (_emailController.text.trim() != 'admin@admin.com') {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
@@ -385,7 +385,6 @@ class _BodyState extends State<Body> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
                 GestureDetector(
                   onTap: widget.showSignUpScreen,
                   child: Text(
