@@ -3,7 +3,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
 import 'package:shuttle_tracker_app/screens/password/mail%20check/mail_check_screen.dart';
 
 class Body extends StatefulWidget {

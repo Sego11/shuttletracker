@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, avoid_function_literals_in_foreach_calls, library_private_types_in_public_api
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -30,8 +30,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
 
-  BitmapDescriptor bruneiBusIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor commercialBusIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor busIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor userIcon = BitmapDescriptor.defaultMarker;
 
   @override
@@ -42,21 +41,15 @@ class _PolyTestMapState extends State<PolyTestMap> {
     _getCommercialCoordinates();
 
     BitmapDescriptor.fromAssetImage(
-   ImageConfiguration.empty,
-      'assets/images/busIcon2.png',
+      ImageConfiguration.empty,
+      'assets/images/busIcon.png',
     ).then((icon) {
       setState(() {
-        bruneiBusIcon = icon;
+        busIcon = icon;
       });
     });
 
-    BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/busIcon2.png")
-        .then((icon) {
-      setState(() {
-        commercialBusIcon = icon;
-      });
-    });
+  
   }
 
   onMapCreated(GoogleMapController controller) {
@@ -90,7 +83,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
               _commercialMarker = Marker(
                 markerId: MarkerId('commercial_location'),
                 position: LatLng(commercialLatitude, commercialLongitude),
-                icon: commercialBusIcon,
+                icon: busIcon,
                 onTap: () {
                   isBusButtonClicked = !isBusButtonClicked;
                   if (isBusButtonClicked) {
@@ -140,7 +133,7 @@ class _PolyTestMapState extends State<PolyTestMap> {
               _destinationMarker = Marker(
                 markerId: MarkerId('brunei_location'),
                 position: LatLng(destinationLatitude, destinationLongitude),
-                icon: bruneiBusIcon,
+                icon: busIcon,
                 onTap: () {
                   isBusButtonClicked = !isBusButtonClicked;
                   if (isBusButtonClicked) {

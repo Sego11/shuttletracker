@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shuttle_tracker_app/constants.dart';
-import 'package:shuttle_tracker_app/main.dart';
 import 'package:shuttle_tracker_app/screens/Log%20In/log_in_screen.dart';
 
 class Body extends StatefulWidget {

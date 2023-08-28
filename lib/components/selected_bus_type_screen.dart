@@ -232,70 +232,73 @@ class _SelectedBusTypeState extends State<SelectedBusType> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                displayBusInfo();
-              },
-              child: Container(
-                height: 75,
-                width: 270,
-                decoration: BoxDecoration(
-                  color: header,
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(
-                    color: black,
-                    width: 1,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/buses.png',
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Text(
-                        widget.selectedBusName,
-                        style: const TextStyle(
-                          color: black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Container(
-              height: 78,
-              width: 70,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: black, width: 1),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  deleteBus();
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  displayBusInfo();
                 },
-                icon: const Icon(
-                  Icons.delete,
-                  size: 30,
-                  color: red,
+                child: Container(
+                  height: 75,
+                  width: 240,
+                  decoration: BoxDecoration(
+                    color: header,
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                      color: black,
+                      width: 1,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/buses.png',
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          widget.selectedBusName,
+                          style: const TextStyle(
+                            color: black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(
+                width: 10,
+              ),
+              Container(
+                height: 75,
+                width: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: black, width: 1),
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    deleteBus();
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 30,
+                    color: red,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
