@@ -86,6 +86,17 @@ class _BodyState extends State<Body> {
           }),
         );
       }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: Text(
+              e.toString(),
+            ),
+          );
+        }),
+      );
     }
   }
 
@@ -302,7 +313,6 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: signUp,
-
               child: Container(
                 height: 63,
                 width: 375,
@@ -326,7 +336,6 @@ class _BodyState extends State<Body> {
                         fontSize: 16,
                       ),
                     ),
-
                   ],
                 ),
               ),

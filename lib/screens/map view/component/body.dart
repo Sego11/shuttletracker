@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_declarations, use_build_context_synchronously, library_private_types_in_public_api
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -6,6 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 const String kGoogleApiKey = 'AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM';
 
@@ -28,34 +30,35 @@ class _BodyState extends State<Body> {
   LatLng selectedPosition = LatLng(6.6745, -1.5716); // Default position
   LatLng? currentLocation;
 
-  DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   Marker? _bruneiMarker;
   Marker? _commercialMarker;
 
-  PolylinePoints _polylinePoints = PolylinePoints();
+  final PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
-  BitmapDescriptor bruneiBusIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor commercialBusIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor busIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor busStops = BitmapDescriptor.defaultMarker;
 
   @override
   void initState() {
     super.initState();
     widget.busName == 'Commercial Bus' ? _getCommercialCoordinates() : null;
     widget.busName == 'Brunei Bus' ? _getBruneiCoordinates() : null;
+
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration.empty,
       'assets/images/busIcon2.png',
     ).then((icon) {
       setState(() {
-        bruneiBusIcon = icon;
+        busIcon = icon;
       });
     });
 
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/busIcon2.png")
+            ImageConfiguration.empty, "assets/images/busstop.png")
         .then((icon) {
       setState(() {
-        commercialBusIcon = icon;
+        busStops = icon;
       });
     });
   }
@@ -67,6 +70,32 @@ class _BodyState extends State<Body> {
         CameraPosition(target: widget.initialSelectedPosition!, zoom: 18),
       ));
     }
+  }
+
+  Future<Duration?> calculateETA(LatLng start, LatLng end) async {
+    final String apiKey =
+        'AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM'; // Replace with your API key
+    final String apiUrl =
+        'https://maps.googleapis.com/maps/api/directions/json';
+
+    final response = await http.get(
+      Uri.parse(
+        '$apiUrl?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=driving&key=$apiKey',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final directionsData = json.decode(response.body);
+      final routes = directionsData['routes'] as List<dynamic>;
+
+      if (routes.isNotEmpty) {
+        final durationInSeconds =
+            routes[0]['legs'][0]['duration']['value'] as int;
+        return Duration(seconds: durationInSeconds);
+      }
+    }
+
+    return null; // Error occurred or no route found
   }
 
   Future<void> _getCommercialCoordinates() async {
@@ -91,7 +120,7 @@ class _BodyState extends State<Body> {
               _commercialMarker = Marker(
                 markerId: MarkerId('commercial_location'),
                 position: LatLng(commercialLatitude, commercialLongitude),
-                icon: commercialBusIcon,
+                icon: busIcon,
                 infoWindow: InfoWindow(
                     title: 'Commercial Bus',
                     onTap: () {
@@ -140,7 +169,7 @@ class _BodyState extends State<Body> {
               _bruneiMarker = Marker(
                 markerId: MarkerId('brunei_location'),
                 position: LatLng(destinationLatitude, destinationLongitude),
-                icon: bruneiBusIcon,
+                icon: busIcon,
                 infoWindow: InfoWindow(
                     title: 'Brunei Bus',
                     onTap: () {
@@ -213,55 +242,307 @@ class _BodyState extends State<Body> {
                 ),
               if (_bruneiMarker != null) _bruneiMarker!,
               if (_commercialMarker != null) _commercialMarker!,
-              Marker(
+             widget.busName =='Commercial Bus' ? Marker(
+
                 markerId: MarkerId('marker1'),
                 position: LatLng(6.6827, -1.5769),
-                icon:  BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
-                infoWindow: InfoWindow(title: 'Commercial Bus Stop'),
-              ),
+                icon: busStops,
+                infoWindow: InfoWindow(
+                  title: 'Commercial Bus Stop',
+                  onTap: () async {
+                    if (_commercialMarker != null) {
+                      LatLng busPosition = _commercialMarker!.position;
+                      LatLng destination = LatLng(6.6827, -1.5769);
+
+                      Duration? eta =
+                          await calculateETA(busPosition, destination);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          content: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 14.0),
+                            child: Text(
+                              'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                              style: TextStyle(height: 1.3),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ):Marker(markerId: MarkerId('value')),
               Marker(
                 markerId: MarkerId('marker2'),
                 position: LatLng(6.6691, -1.5676),
-                icon:BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: busStops,
                 infoWindow: InfoWindow(title: 'KSB Bus Stop'),
+                onTap: () async {
+                  if (_commercialMarker != null) {
+                    LatLng busPosition = _commercialMarker!.position;
+                    LatLng destination = LatLng(6.6691, -1.5676);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (_bruneiMarker != null) {
+                    LatLng busPosition = _bruneiMarker!.position;
+                    LatLng destination = LatLng(6.6691, -1.5676);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
+              widget.busName== 'Brunei Bus'?
               Marker(
                 markerId: MarkerId('marker3'),
                 position: LatLng(6.6704, -1.5742),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: busStops,
                 infoWindow: InfoWindow(title: 'Brunei Bus Stop'),
-              ),
+                onTap: () async {
+                  if (_bruneiMarker != null) {
+                    LatLng busPosition = _bruneiMarker!.position;
+                    LatLng destination = LatLng(6.6704, -1.5742);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ): Marker(markerId: MarkerId('value')),
               Marker(
                 markerId: MarkerId('marker4'),
                 position: LatLng(6.6752, -1.5679),
-                icon:BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: busStops,
                 infoWindow: InfoWindow(title: 'Casley Hayford Bus Stop'),
+                onTap: () async {
+                  if (_commercialMarker != null) {
+                    LatLng busPosition = _commercialMarker!.position;
+                    LatLng destination = LatLng(6.6752, -1.5679);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (_bruneiMarker != null) {
+                    LatLng busPosition = _bruneiMarker!.position;
+                    LatLng destination = LatLng(6.6752, -1.5679);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
               Marker(
                 markerId: MarkerId('marker5'),
                 position: LatLng(6.6745, -1.5676),
-                icon:BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: busStops,
                 infoWindow: InfoWindow(title: 'Pharmacy Bus Stop'),
+                onTap: () async {
+                  if (_commercialMarker != null) {
+                    LatLng busPosition = _commercialMarker!.position;
+                    LatLng destination = LatLng(6.6745, -1.5676);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (_bruneiMarker != null) {
+                    LatLng busPosition = _bruneiMarker!.position;
+                    LatLng destination = LatLng(6.6745, -1.5676);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
+              widget.busName == 'Commercial Bus' ?
               Marker(
                 markerId: MarkerId('marker6'),
                 position: LatLng(6.6793, -1.5728),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: busStops,
                 infoWindow: InfoWindow(title: 'Conti Bus Stop B'),
-              ),
+                onTap: () async {
+                  if (_commercialMarker != null) {
+                    LatLng busPosition = _commercialMarker!.position;
+                    LatLng destination = LatLng(6.6793, -1.5728);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ):Marker(markerId: MarkerId('value')),
+
+              widget.busName == 'Commercial Bus' ?
+
               Marker(
                 markerId: MarkerId('marker7'),
                 position: LatLng(6.6796, -1.5730),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                icon: busStops,
                 infoWindow: InfoWindow(title: 'Conti Bus Stop B'),
-              ),
+                onTap: () async {
+                  if (_commercialMarker != null) {
+                    LatLng busPosition = _commercialMarker!.position;
+                    LatLng destination = LatLng(6.6796, -1.5730);
+
+                    Duration? eta =
+                        await calculateETA(busPosition, destination);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        content: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text(
+                            'Estimated Time of Arrival: ${eta?.inMinutes} minutes ${eta?.inSeconds.remainder(60)} seconds',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ):Marker(markerId: MarkerId('value')),
             },
             polylines: {
               // Polyline for the fixed line between the two coordinates
