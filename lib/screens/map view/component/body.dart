@@ -99,7 +99,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> _getCommercialCoordinates() async {
-    bool isBusButtonClicked = false;
+    // bool isBusButtonClicked = false;
     DatabaseReference commercialRef = _databaseRef.child('Commercial');
 
     // Set up a stream to listen for changes in the commercial coordinates
@@ -122,23 +122,9 @@ class _BodyState extends State<Body> {
                 position: LatLng(commercialLatitude, commercialLongitude),
                 icon: busIcon,
                 infoWindow: InfoWindow(
-                    title: 'Commercial Bus',
-                    onTap: () {
-                      isBusButtonClicked = !isBusButtonClicked;
-                      if (isBusButtonClicked) {
-                        setState(() {
-                          _drawPolyline(
-                            LatLng(6.6827, -1.5769),
-                            LatLng(6.6691, -1.5676),
-                          );
-                        });
-                      } else {
-                        _drawPolyline(
-                          LatLng(0, 0),
-                          LatLng(0, 0),
-                        );
-                      }
-                    }),
+                  title: 'Commercial Bus',
+                 
+                ),
               );
             });
           }
@@ -148,7 +134,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> _getBruneiCoordinates() async {
-    bool isBusButtonClicked = false;
+    // bool isBusButtonClicked = false;
     DatabaseReference destinationRef = _databaseRef.child('GPS');
 
     // Set up a stream to listen for changes in the destination coordinates
@@ -171,23 +157,9 @@ class _BodyState extends State<Body> {
                 position: LatLng(destinationLatitude, destinationLongitude),
                 icon: busIcon,
                 infoWindow: InfoWindow(
-                    title: 'Brunei Bus',
-                    onTap: () {
-                      isBusButtonClicked = !isBusButtonClicked;
-                      if (isBusButtonClicked) {
-                        setState(() {
-                          _drawPolyline(
-                            LatLng(6.6691, -1.5676),
-                            LatLng(6.6704, -1.5742),
-                          );
-                        });
-                      } else {
-                        _drawPolyline(
-                          LatLng(0, 0),
-                          LatLng(0, 0),
-                        );
-                      }
-                    }),
+                  title: 'Brunei Bus',
+             
+                ),
               );
             });
           }
@@ -253,6 +225,7 @@ class _BodyState extends State<Body> {
                           if (_commercialMarker != null) {
                             LatLng busPosition = _commercialMarker!.position;
                             LatLng destination = LatLng(6.6827, -1.5769);
+                            _drawPolyline(busPosition, destination);
 
                             Duration? eta =
                                 await calculateETA(busPosition, destination);
@@ -288,6 +261,7 @@ class _BodyState extends State<Body> {
                   if (_commercialMarker != null) {
                     LatLng busPosition = _commercialMarker!.position;
                     LatLng destination = LatLng(6.6691, -1.5676);
+                    _drawPolyline(busPosition, destination);
 
                     Duration? eta =
                         await calculateETA(busPosition, destination);
@@ -311,6 +285,7 @@ class _BodyState extends State<Body> {
                   } else if (_bruneiMarker != null) {
                     LatLng busPosition = _bruneiMarker!.position;
                     LatLng destination = LatLng(6.6691, -1.5676);
+                    _drawPolyline(busPosition, destination);
 
                     Duration? eta =
                         await calculateETA(busPosition, destination);
@@ -344,6 +319,7 @@ class _BodyState extends State<Body> {
                         if (_bruneiMarker != null) {
                           LatLng busPosition = _bruneiMarker!.position;
                           LatLng destination = LatLng(6.6704, -1.5742);
+                          _drawPolyline(busPosition, destination);
 
                           Duration? eta =
                               await calculateETA(busPosition, destination);
@@ -377,6 +353,7 @@ class _BodyState extends State<Body> {
                   if (_commercialMarker != null) {
                     LatLng busPosition = _commercialMarker!.position;
                     LatLng destination = LatLng(6.6752, -1.5679);
+                    _drawPolyline(busPosition, destination);
 
                     Duration? eta =
                         await calculateETA(busPosition, destination);
@@ -400,6 +377,7 @@ class _BodyState extends State<Body> {
                   } else if (_bruneiMarker != null) {
                     LatLng busPosition = _bruneiMarker!.position;
                     LatLng destination = LatLng(6.6752, -1.5679);
+                    _drawPolyline(busPosition, destination);
 
                     Duration? eta =
                         await calculateETA(busPosition, destination);
@@ -432,6 +410,7 @@ class _BodyState extends State<Body> {
                   if (_commercialMarker != null) {
                     LatLng busPosition = _commercialMarker!.position;
                     LatLng destination = LatLng(6.6745, -1.5676);
+                    _drawPolyline(busPosition, destination);
 
                     Duration? eta =
                         await calculateETA(busPosition, destination);
@@ -455,6 +434,7 @@ class _BodyState extends State<Body> {
                   } else if (_bruneiMarker != null) {
                     LatLng busPosition = _bruneiMarker!.position;
                     LatLng destination = LatLng(6.6745, -1.5676);
+                    _drawPolyline(busPosition, destination);
 
                     Duration? eta =
                         await calculateETA(busPosition, destination);
@@ -488,6 +468,7 @@ class _BodyState extends State<Body> {
                         if (_commercialMarker != null) {
                           LatLng busPosition = _commercialMarker!.position;
                           LatLng destination = LatLng(6.6793, -1.5728);
+                          _drawPolyline(busPosition, destination);
 
                           Duration? eta =
                               await calculateETA(busPosition, destination);
@@ -522,6 +503,7 @@ class _BodyState extends State<Body> {
                         if (_commercialMarker != null) {
                           LatLng busPosition = _commercialMarker!.position;
                           LatLng destination = LatLng(6.6796, -1.5730);
+                          _drawPolyline(busPosition, destination);
 
                           Duration? eta =
                               await calculateETA(busPosition, destination);
