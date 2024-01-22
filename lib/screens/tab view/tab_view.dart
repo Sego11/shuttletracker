@@ -16,7 +16,7 @@ class TabView extends StatefulWidget {
 }
 
 class _TabViewState extends State<TabView> {
-  final PageController pageController = PageController();
+  final pageController = PageController();
 
   ValueNotifier<int> currentIndexNotifier = ValueNotifier<int>(0);
 

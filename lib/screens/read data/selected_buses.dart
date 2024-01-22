@@ -13,19 +13,14 @@ List<dynamic> allUsers = [];
 List<dynamic> allBuses = [];
 
 class ReadData {
-  Future addBus(
-    String name,
-    String number,
-    String destination,
-    int seatNumber,
-    String start,
-  ) async {
+  Future addBus(String name, String number, String destination, int seatNumber,
+      String start) async {
     final document = await FirebaseFirestore.instance.collection('buses').add({
       'Bus Name': name,
       'Bus Number': number,
       'Destination': destination,
       'Seat Number': seatNumber,
-      'Start': start,
+      'Start': start
     });
 
     final id = document.id;
